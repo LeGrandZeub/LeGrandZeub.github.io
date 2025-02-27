@@ -3,12 +3,12 @@ importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js")
 
 // 🔥 Remplace ces valeurs par celles de ton projet Firebase
 const firebaseConfig = {
-  apiKey: "TON_API_KEY",
-  authDomain: "TON_PROJET.firebaseapp.com",
-  projectId: "TON_PROJET",
-  storageBucket: "TON_PROJET.appspot.com",
-  messagingSenderId: "TON_SENDER_ID",
-  appId: "TON_APP_ID"
+  apiKey: "AIzaSyCq3vbwnUxKzARVJf9hv2FZw-n0fkdWUCg",
+  authDomain: "louqo-77593.firebaseapp.com",
+  projectId: "louqo-77593",
+  storageBucket: "louqo-77593.firebasestorage.app",
+  messagingSenderId: "489535153042",
+  appId: "1:489535153042:web:49ce6e1e4052d226abd74b",
 };
 
 // 📌 Initialisation de Firebase
