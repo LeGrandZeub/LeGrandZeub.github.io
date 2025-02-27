@@ -88714,11 +88714,12 @@ case 3:if(J.e1(q.z))q.a_(new A.auQ(q))
 else q.O2(q.Q.a.a)
 return A.u(null,r)}})
 return A.v($async$tv,r)},
-J(a){var s,r,q=this,p=null,o=A.bO(a,p,t.w).w.a.a*0.8,n=A.cg(p,p,B.n,p,new A.c3(p,p,p,p,p,new A.iv(B.fl,B.e2,B.bO,A.a([B.bZ,B.k,B.aH],t.t_),p,p),B.R),p,p,p,p,p,p,p),m=q.a5C()
-if(q.at)s=q.a50()
+J(a){var s,r,q,p=this,o=null,n=A.bO(a,o,t.w).w.a.a*0.8,m=A.cg(o,o,B.n,o,new A.c3(o,o,o,o,o,new A.iv(B.fl,B.e2,B.bO,A.a([B.bZ,B.k,B.aH],t.t_),o,o),B.R),o,o,o,o,o,o,o),l=p.a5C()
+if(p.at)s=p.a50()
 else{s=t.p
-s=A.cR(A.a([A.jN(B.Q,A.a([q.a5t(o),A.aCm(A.MJ("assets/images/qr_overlay.png",p,p,o*0.8),0.7)],s),B.P,B.bu),B.R4,A.cY(A.MJ("assets/images/logo_louqo.png",p,p,120),p,p)],s),B.z,B.dz,B.w)}r=t.p
-return A.jH(p,p,A.jN(B.bT,A.a([n,A.rg(!0,A.cR(A.a([m,A.jl(s,1)],r),B.z,B.D,B.w),!0,B.T,!0,!0)],r),B.P,B.bu),!1,p)},
+s=A.cR(A.a([A.jN(B.Q,A.a([p.a5t(n),A.aCm(A.MJ("assets/images/qr_overlay.png",o,o,n*0.8),0.7)],s),B.P,B.bu),B.R4,A.cY(A.MJ("assets/images/logo_louqo.png",o,o,120),o,o)],s),B.z,B.dz,B.w)}r=t.p
+q=A.jH(o,o,A.jN(B.bT,A.a([m,A.rg(!0,A.cR(A.a([l,A.jl(s,1)],r),B.z,B.D,B.w),!0,B.T,!0,!0)],r),B.P,B.bu),!1,o)
+return q},
 a5C(){var s,r=this,q=null,p=A.cG(30),o=A.a([new A.d4(0,B.bo,A.U(51,0,0,0),B.Nb,10)],t.sq),n=A.a([],t.p)
 if(r.at)n.push(A.qc(q,B.HH,q,r.gais(),q,q))
 s=!r.at?B.HG:q
