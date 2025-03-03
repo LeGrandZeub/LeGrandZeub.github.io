@@ -110,6 +110,9 @@ function onGooglePayButtonClicked(amount) {
 
   const paymentDataRequest = getPaymentDataRequest(amount);
 
+  // ✅ Ouvre un nouvel onglet avant d'exécuter Google Pay pour éviter les blocages
+  const newTab = window.open("about:blank", "_blank");
+
   client.loadPaymentData(paymentDataRequest)
     .then(function(paymentData) {
       console.log("✅ Données de paiement Google Pay reçues :", paymentData);
@@ -118,11 +121,12 @@ function onGooglePayButtonClicked(amount) {
     .catch(function(err) {
       console.error("❌ Erreur Google Pay :", err);
 
-      // ✅ Ouvre Google Pay dans un nouvel onglet si la popup est bloquée
-      if (err.statusCode === "DEVELOPER_ERROR" || err.message.includes("popup blocked")) {
-        console.warn("⚠️ Popup bloquée, ouverture de Google Pay dans un nouvel onglet...");
-        const googlePayUrl = "https://pay.google.com/gp/w/u/0/home/signup";
-        window.open(googlePayUrl, "_blank"); // ✅ Ouvre Google Pay dans un nouvel onglet
+      // ✅ Redirige vers une page Google Pay si la popup est bloquée
+      const googlePayUrl = "https://pay.google.com/gp/w/u/0/home/signup";
+      if (newTab) {
+        newTab.location.href = googlePayUrl;
+      } else {
+        window.open(googlePayUrl, "_blank");
       }
     });
 }
