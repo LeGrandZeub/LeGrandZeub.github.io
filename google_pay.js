@@ -28,7 +28,6 @@ const allowedPaymentMethods = [
   }
 ];
 
-
 // 4️⃣ Fonction pour récupérer un client Google Pay initialisé
 let paymentsClient = null;
 
@@ -48,7 +47,7 @@ function getGooglePaymentsClient() {
 // 5️⃣ Vérifier si Google Pay est disponible et afficher le bouton
 function displayGooglePayButton(amount) {
   console.log("🔎 Vérification de Google Pay...");
-  
+
   const client = getGooglePaymentsClient();
   if (!client) {
     console.error("❌ Google Pay client non initialisé.");
@@ -60,7 +59,7 @@ function displayGooglePayButton(amount) {
       console.log("🔍 Google Pay response:", response); // ✅ Debug response
       if (response.result) {
         console.log("✅ Google Pay est disponible. Ajout du bouton...");
-        
+
         // Évite de créer plusieurs boutons en réinitialisant `google-pay-container`
         const container = document.getElementById('google-pay-container');
         if (container) {
@@ -110,6 +109,7 @@ function onGooglePayButtonClicked(amount) {
   }
 
   const paymentDataRequest = getPaymentDataRequest(amount);
+
   client.loadPaymentData(paymentDataRequest)
     .then(function(paymentData) {
       console.log("✅ Données de paiement Google Pay reçues :", paymentData);
@@ -117,6 +117,13 @@ function onGooglePayButtonClicked(amount) {
     })
     .catch(function(err) {
       console.error("❌ Erreur Google Pay :", err);
+
+      // ✅ Ouvre Google Pay dans un nouvel onglet si la popup est bloquée
+      if (err.statusCode === "DEVELOPER_ERROR" || err.message.includes("popup blocked")) {
+        console.warn("⚠️ Popup bloquée, ouverture de Google Pay dans un nouvel onglet...");
+        const googlePayUrl = "https://pay.google.com/gp/w/u/0/home/signup";
+        window.open(googlePayUrl, "_blank"); // ✅ Ouvre Google Pay dans un nouvel onglet
+      }
     });
 }
 
