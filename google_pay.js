@@ -1,110 +1,139 @@
-// google_pay.js
-
-// 1. Définir la configuration de base pour Google Pay
+// 1️⃣ Définition de la configuration Google Pay
 const baseRequest = {
-    apiVersion: 2,
-    apiVersionMinor: 0,
-  };
-  
-  // 2. Définir les réseaux de cartes et les méthodes d’authentification autorisées
-  const allowedCardNetworks = ["VISA", "MASTERCARD"];
-  const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
-  
-  // 3. Configurer la tokenization pour SumUp
-  const tokenizationSpecification = {
-    type: 'PAYMENT_GATEWAY',
-    parameters: {
-      gateway: 'sumup', // Indique que SumUp est utilisé comme passerelle
-      gatewayMerchantId: 'MC797RN3' // Remplacez par votre ID marchand SumUp
-    }
-  };
-  
-  // 4. Définir les méthodes de paiement autorisées
-  const allowedPaymentMethods = [{
+  apiVersion: 2,
+  apiVersionMinor: 0,
+};
+
+const allowedCardNetworks = ["VISA", "MASTERCARD"];
+const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+
+// 2️⃣ Configuration de la tokenisation pour SumUp
+const tokenizationSpecification = {
+  type: 'PAYMENT_GATEWAY',
+  parameters: {
+    gateway: 'sumup', // ✅ SumUp comme passerelle de paiement
+    gatewayMerchantId: 'MC797RN3' // ✅ Remplace par ton vrai merchant ID SumUp
+  }
+};
+
+// 3️⃣ Définition des méthodes de paiement autorisées
+const allowedPaymentMethods = [
+  {
     type: 'CARD',
     parameters: {
       allowedAuthMethods: allowedCardAuthMethods,
       allowedCardNetworks: allowedCardNetworks,
     },
     tokenizationSpecification: tokenizationSpecification,
-  }];
+  }
+];
+
+
+// 4️⃣ Fonction pour récupérer un client Google Pay initialisé
+let paymentsClient = null;
+
+function getGooglePaymentsClient() {
+  if (paymentsClient === null) {
+    console.log("📌 Initialisation de Google PaymentsClient...");
+    try {
+      paymentsClient = new google.payments.api.PaymentsClient({ environment: 'TEST' });
+    } catch (error) {
+      console.error("❌ Erreur lors de l'initialisation de Google Pay :", error);
+      return null;
+    }
+  }
+  return paymentsClient;
+}
+
+// 5️⃣ Vérifier si Google Pay est disponible et afficher le bouton
+function displayGooglePayButton(amount) {
+  console.log("🔎 Vérification de Google Pay...");
   
-  // 5. Construire l'objet PaymentDataRequest complet
-  const paymentDataRequest = Object.assign({}, baseRequest);
-  paymentDataRequest.allowedPaymentMethods = allowedPaymentMethods;
-  paymentDataRequest.merchantInfo = {
-    merchantId: 'YOUR_GOOGLE_MERCHANT_ID',  // Optionnel selon vos besoins
-    merchantName: 'Louqo'        // Remplacez par le nom de votre entreprise
-  };
-  paymentDataRequest.transactionInfo = {
-    totalPriceStatus: 'FINAL',
-    totalPrice: '1.00',   // Ce montant devra être dynamique selon la commande
-    currencyCode: 'EUR'   // Changez selon la devise souhaitée (par ex. EUR)
-  };
-  
-  // 6. Initialiser l'instance PaymentsClient en mode TEST
-  const paymentsClient = new google.payments.api.PaymentsClient({ environment: 'TEST' });
-  
-  // 7. Vérifier si Google Pay est disponible et afficher le bouton
-  paymentsClient.isReadyToPay({ allowedPaymentMethods: allowedPaymentMethods })
+  const client = getGooglePaymentsClient();
+  if (!client) {
+    console.error("❌ Google Pay client non initialisé.");
+    return;
+  }
+
+  client.isReadyToPay({ allowedPaymentMethods })
     .then(function(response) {
+      console.log("🔍 Google Pay response:", response); // ✅ Debug response
       if (response.result) {
-        const button = paymentsClient.createButton({
-          onClick: onGooglePayButtonClicked,
-          buttonColor: 'black',
-          buttonType: 'long'
-        });
+        console.log("✅ Google Pay est disponible. Ajout du bouton...");
+        
+        // Évite de créer plusieurs boutons en réinitialisant `google-pay-container`
         const container = document.getElementById('google-pay-container');
         if (container) {
+          container.innerHTML = ""; // ✅ Nettoie le container
+          const button = client.createButton({
+            onClick: () => onGooglePayButtonClicked(amount),
+            buttonColor: 'black',
+            buttonType: 'long'
+          });
           container.appendChild(button);
         } else {
-          console.error('Élément avec l\'ID "google-pay-container" introuvable.');
+          console.error("❌ Élément 'google-pay-container' introuvable.");
         }
       } else {
-        console.error('Google Pay n\'est pas disponible.');
+        console.error("❌ Google Pay non disponible.");
       }
     })
     .catch(function(err) {
-      console.error("Erreur lors de la vérification de la disponibilité de Google Pay :", err);
+      console.error("❌ Erreur lors de la vérification de Google Pay :", err);
     });
-  
-  // 8. Fonction appelée lors du clic sur le bouton Google Pay
-  function onGooglePayButtonClicked() {
-    paymentsClient.loadPaymentData(paymentDataRequest)
-      .then(function(paymentData) {
-        console.log("Données de paiement reçues :", paymentData);
-        // Traitez le paiement en envoyant le token à votre backend
-        processGooglePayPayment(paymentData);
-      })
-      .catch(function(err) {
-        console.error("Erreur lors du chargement des données de paiement :", err);
-      });
+}
+
+// 6️⃣ Fonction pour générer dynamiquement la requête de paiement
+function getPaymentDataRequest(amount) {
+  return {
+    ...baseRequest,
+    allowedPaymentMethods: allowedPaymentMethods,
+    merchantInfo: {
+      merchantName: 'Louqo',
+    },
+    transactionInfo: {
+      totalPriceStatus: 'FINAL',
+      totalPrice: amount.toFixed(2), // ✅ Montant dynamique depuis Flutter
+      currencyCode: 'EUR'
+    }
+  };
+}
+
+// 7️⃣ Fonction appelée lors du clic sur le bouton Google Pay
+function onGooglePayButtonClicked(amount) {
+  console.log("🛒 Paiement Google Pay demandé pour :", amount, "EUR");
+
+  const client = getGooglePaymentsClient();
+  if (!client) {
+    console.error("❌ Google PaymentsClient non initialisé.");
+    return;
   }
-  
-  // 9. Fonction de traitement du paiement : envoi du token à votre backend pour finaliser le paiement via SumUp
-  function processGooglePayPayment(paymentData) {
-    // Extraire le token de paiement. La structure peut varier en fonction de la configuration.
-    const paymentToken = paymentData.paymentMethodData.tokenizationData.token;
-    console.log("Token de paiement :", paymentToken);
-  
-    // Exemple : Envoyer ce token à votre backend via une requête fetch
-    fetch('/process-payment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        paymentToken: paymentToken,
-        // Ajoutez d'autres données pertinentes, comme le montant ou les détails de la commande
-      })
+
+  const paymentDataRequest = getPaymentDataRequest(amount);
+  client.loadPaymentData(paymentDataRequest)
+    .then(function(paymentData) {
+      console.log("✅ Données de paiement Google Pay reçues :", paymentData);
+      sendPaymentTokenToFlutter(paymentData);
     })
-    .then(response => response.json())
-    .then(data => {
-      console.log("Paiement traité avec succès :", data);
-      // Redirigez l'utilisateur vers une page de confirmation, par exemple
-    })
-    .catch(error => {
-      console.error("Erreur lors du traitement du paiement :", error);
+    .catch(function(err) {
+      console.error("❌ Erreur Google Pay :", err);
     });
+}
+
+// 8️⃣ Fonction pour envoyer le token Google Pay à Flutter via JavaScriptChannel
+function sendPaymentTokenToFlutter(paymentData) {
+  const paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+  console.log("🎯 Token Google Pay :", paymentToken);
+
+  if (window.PaymentResponseChannel) {
+    window.PaymentResponseChannel.postMessage(JSON.stringify({
+      type: "GOOGLE_PAY",
+      token: paymentToken
+    }));
+  } else {
+    console.error("❌ Flutter PaymentResponseChannel introuvable.");
   }
-  
+}
+
+// 9️⃣ Expose la fonction globalement pour que Flutter puisse l’appeler
+window.displayGooglePayButton = displayGooglePayButton;
