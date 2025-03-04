@@ -158,14 +158,14 @@ function sendPaymentTokenToFlutter(paymentData) {
   const paymentToken = paymentData.paymentMethodData.tokenizationData.token;
   console.log("🎯 Token Google Pay :", paymentToken);
 
-  // ✅ Envoi du token à Flutter via JavaScriptChannel
-  if (window.PaymentResponseChannel) {
-    window.PaymentResponseChannel.postMessage(JSON.stringify({
+  // ✅ Vérifie que Flutter est bien en écoute avant d'envoyer
+  if (window.opener) {
+    window.opener.postMessage(JSON.stringify({
       type: "GOOGLE_PAY",
       token: paymentToken
-    }));
+    }), "*"); // Utilisation de "*" au lieu de "null" pour éviter l'erreur de targetOrigin
   } else {
-    console.error("❌ Flutter PaymentResponseChannel introuvable.");
+    console.error("❌ Aucune fenêtre parent trouvée pour envoyer le token !");
   }
 }
 

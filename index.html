@@ -1,17 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <!-- 📌 Détection automatique de l’environnement -->
+  <!-- 📌 Détection automatique de l’environnement pour définir le `base` -->
   <script>
     const isLocalhost = window.location.hostname === "localhost";
-    document.write('<base href="' + (isLocalhost ? "/" : "https://legrandzeub.github.io/") + '">');
+    document.write('<base href="' + (isLocalhost ? "/" : "/") + '">');
   </script>
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Louqo - Paiement facile avec Google Pay et SumUp.">
 
-  <!-- iOS meta tags & icons -->
+  <!-- ✅ Sécurisation avec Content Security Policy (CSP) pour Google Pay -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' https://pay.google.com https://*.googleapis.com https://*.gstatic.com;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pay.google.com https://*.googleapis.com https://*.gstatic.com;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data:;
+    frame-src https://pay.google.com;
+    connect-src 'self' https://pay.google.com https://*.googleapis.com https://*.gstatic.com;
+    upgrade-insecure-requests;">
+
+  <!-- iOS Meta Tags & Icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Louqo">
@@ -23,20 +34,20 @@
   <title>Louqo</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Firebase SDKs -->
+  <!-- ✅ Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 
-  <!-- Google Pay SDK -->
-  <script async
-  src="https://pay.google.com/gp/p/js/pay.js"
-  onload="console.log('✅ Google Pay script chargé avec succès')"
-  onerror="console.error('❌ Erreur de chargement du script Google Pay')">
+  <!-- ✅ Google Pay SDK -->
+  <script async 
+    src="https://pay.google.com/gp/p/js/pay.js"
+    onload="console.log('✅ Google Pay script chargé avec succès')"
+    onerror="console.error('❌ Erreur de chargement du script Google Pay')">
   </script>
   <script src="google_pay.js"></script>
 
-  <!-- Initialisation Firebase -->
+  <!-- ✅ Initialisation Firebase -->
   <script>
     var firebaseConfig = {
       apiKey: "AIzaSyCq3vbwnUxKzARVJf9hv2FZw-n0fkdWUCg",
@@ -48,10 +59,10 @@
       measurementId: "G-FSTVLHXZ6T"
     };
 
-    // Initialisation Firebase
+    // 📌 Initialisation Firebase
     firebase.initializeApp(firebaseConfig);
 
-    // Initialisation de Firebase Messaging
+    // 📩 Initialisation de Firebase Messaging pour les notifications
     if (firebase.messaging.isSupported()) {
       const messaging = firebase.messaging();
       messaging.onMessage((payload) => {
@@ -62,7 +73,7 @@
     }
   </script>
 
-  <!-- Enregistrement et mise à jour automatique du Service Worker -->
+  <!-- ✅ Enregistrement et mise à jour automatique du Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/firebase-messaging-sw.js')
@@ -73,7 +84,7 @@
           console.error('❌ Échec de l\'enregistrement du Service Worker:', error);
         });
 
-      // ✅ Mise à jour forcée du Service Worker pour éviter le cache obsolète
+      // ✅ Mise à jour automatique du Service Worker
       navigator.serviceWorker.ready.then(function(registration) {
         registration.update();
       });
