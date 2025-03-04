@@ -12,16 +12,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Louqo - Paiement facile avec Google Pay et SumUp.">
 
-  <!-- ✅ Sécurisation avec Content Security Policy (CSP) pour Google Pay -->
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self' https://pay.google.com https://*.googleapis.com https://*.gstatic.com;
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pay.google.com https://*.googleapis.com https://*.gstatic.com;
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' data:;
-    frame-src https://pay.google.com;
-    connect-src 'self' https://pay.google.com https://*.googleapis.com https://*.gstatic.com;
-    upgrade-insecure-requests;">
-
   <!-- iOS Meta Tags & Icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -39,7 +29,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 
-  <!-- ✅ Google Pay SDK (pour l'auto-remplissage de carte) -->
+  <!-- ✅ Google Pay SDK -->
   <script async 
     src="https://pay.google.com/gp/p/js/pay.js"
     onload="console.log('✅ Google Pay script chargé avec succès')"
