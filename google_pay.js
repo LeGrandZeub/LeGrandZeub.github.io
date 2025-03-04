@@ -44,7 +44,7 @@ function getGooglePaymentsClient() {
         environment: 'PRODUCTION', // ✅ Passé en production
         merchantInfo: {
           merchantName: "Louqo",
-          merchantId: "MC797RN3" // ✅ Ton vrai merchant ID
+          merchantId: "BCR2DN4T777KLZBX" // ✅ Ton vrai merchant ID
         }
       });
     } catch (error) {
@@ -102,7 +102,7 @@ function autofillCardDetails() {
     allowedPaymentMethods: allowedPaymentMethods,
     merchantInfo: {
       merchantName: "Louqo",
-      merchantId: "MC797RN3"
+      merchantId: "BCR2DN4T777KLZBX"
     },
     transactionInfo: {
       totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
