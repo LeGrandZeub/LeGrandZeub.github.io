@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
+  <!-- 📌 Détection automatique de l’environnement -->
+  <script>
+    const isLocalhost = window.location.hostname === "localhost";
+    document.write('<base href="' + (isLocalhost ? "/" : "https://legrandzeub.github.io/") + '">');
+  </script>
+
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Louqo - Commandez et payez en toute simplicité.">
-
-  <!-- Base URL pour GitHub Pages -->
-  <base href="https://legrandzeub.github.io/">
+  <meta name="description" content="Louqo - Paiement facile avec Google Pay et SumUp.">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,16 +28,16 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 
-  <!-- Google Pay API -->
+  <!-- Google Pay SDK -->
   <script async
-    src="https://pay.google.com/gp/p/js/pay.js"
-    onload="console.log('✅ Google Pay script chargé avec succès')"
-    onerror="console.error('❌ Erreur de chargement du script Google Pay')">
+  src="https://pay.google.com/gp/p/js/pay.js"
+  onload="console.log('✅ Google Pay script chargé avec succès')"
+  onerror="console.error('❌ Erreur de chargement du script Google Pay')">
   </script>
   <script src="google_pay.js"></script>
 
+  <!-- Initialisation Firebase -->
   <script>
-    // Configuration Firebase
     var firebaseConfig = {
       apiKey: "AIzaSyCq3vbwnUxKzARVJf9hv2FZw-n0fkdWUCg",
       authDomain: "louqo-77593.firebaseapp.com",

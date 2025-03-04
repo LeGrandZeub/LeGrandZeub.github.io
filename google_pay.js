@@ -6,7 +6,7 @@ const baseRequest = {
 
 // 2️⃣ Vérification et correction de l'environnement sécurisé
 if (window.location.protocol !== "https:") {
-  console.warn("⚠️ Google Pay doit être utilisé en HTTPS ! Essayez ngrok ou un serveur local sécurisé.");
+  console.warn("⚠️ Google Pay doit être utilisé en HTTPS ! Essayez GitHub Pages ou un serveur local sécurisé.");
 }
 
 // 3️⃣ Cartes et méthodes d'authentification autorisées
@@ -42,6 +42,12 @@ function getGooglePaymentsClient() {
     try {
       paymentsClient = new google.payments.api.PaymentsClient({
         environment: 'TEST',
+        merchantInfo: {
+          merchantName: "Louqo",
+        },
+        paymentDataCallbacks: {
+          onPaymentAuthorized: onPaymentAuthorized
+        }
       });
     } catch (error) {
       console.error("❌ Erreur lors de l'initialisation de Google Pay :", error);
@@ -123,32 +129,23 @@ function onGooglePayButtonClicked(amount) {
 
   const paymentDataRequest = getPaymentDataRequest(amount);
 
-  // ✅ Ouvre un nouvel onglet avec une URL temporaire valide
-  const newWindow = window.open('payment_loading.html', '_blank');
-
-  if (!newWindow) {
-    console.error("❌ Impossible d'ouvrir un nouvel onglet. Vérifie les permissions du navigateur.");
-    alert("Veuillez autoriser l'ouverture des nouvelles fenêtres pour continuer.");
-    return;
-  }
-
-  // ✅ Donne le focus à la nouvelle fenêtre pour éviter qu'elle soit bloquée
-  newWindow.focus();
-
+  // ✅ Force l'utilisation du mode "overlay" pour éviter les popups bloquées
   client.loadPaymentData(paymentDataRequest)
-    .then(function(paymentData) {
-      console.log("✅ Données de paiement Google Pay reçues :", paymentData);
-      sendPaymentTokenToFlutter(paymentData);
+  .then(function(paymentData) {
+    console.log("✅ Données de paiement Google Pay reçues :", paymentData);
+    sendPaymentTokenToFlutter(paymentData);
+  })
+  .catch(function(err) {
+    console.error("❌ Erreur Google Pay :", err);
+  });
+}
 
-      // ✅ Redirection vers une page de confirmation après le paiement
-      newWindow.location.href = "https://example.com/success"; // Remplace par une vraie page de confirmation
-    })
-    .catch(function(err) {
-      console.error("❌ Erreur Google Pay :", err);
+// 🔟 Gère l'autorisation du paiement
+function onPaymentAuthorized(paymentData) {
+  console.log("💳 Paiement autorisé :", paymentData);
 
-      // ❌ Redirection vers une page d'échec en cas de problème
-      newWindow.location.href = "https://example.com/failure"; // Remplace par une vraie page d'échec
-    });
+  sendPaymentTokenToFlutter(paymentData);
+  return { transactionState: 'SUCCESS' };
 }
 
 // 🔟 Envoi du token Google Pay à Flutter via JavaScriptChannel
@@ -161,9 +158,8 @@ function sendPaymentTokenToFlutter(paymentData) {
   const paymentToken = paymentData.paymentMethodData.tokenizationData.token;
   console.log("🎯 Token Google Pay :", paymentToken);
 
-  // ✅ Vérifie si Flutter peut recevoir les données
+  // ✅ Envoi du token à Flutter via JavaScriptChannel
   if (window.PaymentResponseChannel) {
-    console.log("📡 Envoi du token à Flutter...");
     window.PaymentResponseChannel.postMessage(JSON.stringify({
       type: "GOOGLE_PAY",
       token: paymentToken
