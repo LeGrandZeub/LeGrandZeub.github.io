@@ -123,23 +123,33 @@ function onGooglePayButtonClicked(amount) {
 
   const paymentDataRequest = getPaymentDataRequest(amount);
 
-  // ✅ Ouvre le paiement dans un nouvel onglet
-  const newWindow = window.open('', '_blank');
+  // ✅ Ouvre Google Pay dans un **nouvel onglet** au lieu d'une popup
+  alert("Google Pay va s'ouvrir dans un nouvel onglet.");
+  const newWindow = window.open('about:blank', '_blank');
+  
+  if (!newWindow) {
+    console.error("❌ Impossible d'ouvrir un nouvel onglet. Vérifie les permissions du navigateur.");
+    return;
+  }
 
   client.loadPaymentData(paymentDataRequest)
-  .then(function(paymentData) {
-    console.log("✅ Données de paiement Google Pay reçues :", paymentData);
-    sendPaymentTokenToFlutter(paymentData);
-    if (newWindow) {
-      newWindow.close();
-    }
-  })
-  .catch(function(err) {
-    console.error("❌ Erreur Google Pay :", err);
-    if (newWindow) {
-      newWindow.close();
-    }
-  });
+    .then(function(paymentData) {
+      console.log("✅ Données de paiement Google Pay reçues :", paymentData);
+      sendPaymentTokenToFlutter(paymentData);
+
+      // ✅ Ferme l'onglet une fois le paiement validé
+      if (newWindow) {
+        newWindow.close();
+      }
+    })
+    .catch(function(err) {
+      console.error("❌ Erreur Google Pay :", err);
+      
+      // ❌ Ferme l'onglet si une erreur survient
+      if (newWindow) {
+        newWindow.close();
+      }
+    });
 }
 
 // 🔟 Envoi du token Google Pay à Flutter via JavaScriptChannel
