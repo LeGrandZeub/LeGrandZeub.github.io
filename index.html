@@ -1,32 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <base href="/">
-
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Louqo - Commandez et payez en toute simplicité.">
+
+  <!-- Base URL pour GitHub Pages -->
+  <base href="https://legrandzeub.github.io/">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="louqo">
+  <meta name="apple-mobile-web-app-title" content="Louqo">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>louqo</title>
+  <title>Louqo</title>
   <link rel="manifest" href="manifest.json">
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>  
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+
+  <!-- Google Pay API -->
   <script async
-  src="https://pay.google.com/gp/p/js/pay.js"
-  onload="console.log('✅ Google Pay script chargé avec succès')"
-  onerror="console.error('❌ Erreur de chargement du script Google Pay')">
+    src="https://pay.google.com/gp/p/js/pay.js"
+    onload="console.log('✅ Google Pay script chargé avec succès')"
+    onerror="console.error('❌ Erreur de chargement du script Google Pay')">
   </script>
   <script src="google_pay.js"></script>
 
@@ -45,7 +48,7 @@
     // Initialisation Firebase
     firebase.initializeApp(firebaseConfig);
 
-    // Initialisation de Firebase Messaging pour recevoir les notifications en premier plan
+    // Initialisation de Firebase Messaging
     if (firebase.messaging.isSupported()) {
       const messaging = firebase.messaging();
       messaging.onMessage((payload) => {
@@ -56,16 +59,21 @@
     }
   </script>
 
-  <!-- Enregistrement du service worker pour les notifications push -->
+  <!-- Enregistrement et mise à jour automatique du Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/firebase-messaging-sw.js')
         .then(function(registration) {
-          console.log('Service Worker enregistré avec succès, scope:', registration.scope);
+          console.log('✅ Service Worker enregistré avec succès:', registration.scope);
         })
         .catch(function(error) {
-          console.error('Échec de l\'enregistrement du Service Worker:', error);
+          console.error('❌ Échec de l\'enregistrement du Service Worker:', error);
         });
+
+      // ✅ Mise à jour forcée du Service Worker pour éviter le cache obsolète
+      navigator.serviceWorker.ready.then(function(registration) {
+        registration.update();
+      });
     }
   </script>
 </head>
