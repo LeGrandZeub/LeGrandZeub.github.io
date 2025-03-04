@@ -123,32 +123,31 @@ function onGooglePayButtonClicked(amount) {
 
   const paymentDataRequest = getPaymentDataRequest(amount);
 
-  // ✅ Ouvre Google Pay dans un **nouvel onglet** au lieu d'une popup
-  alert("Google Pay va s'ouvrir dans un nouvel onglet.");
+  // ✅ Ouvre un nouvel onglet avec une URL temporaire
   const newWindow = window.open('about:blank', '_blank');
-  
+
   if (!newWindow) {
     console.error("❌ Impossible d'ouvrir un nouvel onglet. Vérifie les permissions du navigateur.");
+    alert("Veuillez autoriser l'ouverture des nouvelles fenêtres pour continuer.");
     return;
   }
+
+  // ✅ Écrit un message temporaire dans le nouvel onglet pour éviter qu'il soit bloqué
+  newWindow.document.write('<p>Redirection vers Google Pay...</p>');
 
   client.loadPaymentData(paymentDataRequest)
     .then(function(paymentData) {
       console.log("✅ Données de paiement Google Pay reçues :", paymentData);
       sendPaymentTokenToFlutter(paymentData);
 
-      // ✅ Ferme l'onglet une fois le paiement validé
-      if (newWindow) {
-        newWindow.close();
-      }
+      // ✅ Redirection vers une page de confirmation après le paiement
+      newWindow.location.href = "https://www.google.com"; // Remplace par une page de confirmation
     })
     .catch(function(err) {
       console.error("❌ Erreur Google Pay :", err);
-      
-      // ❌ Ferme l'onglet si une erreur survient
-      if (newWindow) {
-        newWindow.close();
-      }
+
+      // ❌ Redirection vers une page d'erreur en cas d'échec
+      newWindow.location.href = "https://www.google.com/search?q=paiement+échec"; // Remplace par une vraie page d'échec
     });
 }
 
