@@ -41,7 +41,7 @@ function getGooglePaymentsClient() {
     console.log("📌 Initialisation de Google PaymentsClient...");
     try {
       paymentsClient = new google.payments.api.PaymentsClient({
-        environment: 'PRODUCTION', // ✅ Passé en production
+        environment: 'TEST', // ✅ Passé en production
         merchantInfo: {
           merchantName: "Louqo",
           merchantId: "BCR2DN4T777KLZBX" // ✅ Ton vrai merchant ID
