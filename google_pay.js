@@ -1,64 +1,51 @@
-// ✅ 1️⃣ Définition de la configuration Google Pay
+// 1️⃣ Définition de la configuration Google Pay
 const baseRequest = {
   apiVersion: 2,
   apiVersionMinor: 0,
 };
 
-// ✅ 2️⃣ Vérification de l'environnement sécurisé
+// 2️⃣ Vérification et correction de l'environnement sécurisé
 if (window.location.protocol !== "https:") {
   console.warn("⚠️ Google Pay doit être utilisé en HTTPS ! Essayez GitHub Pages ou un serveur local sécurisé.");
 }
 
-// ✅ 3️⃣ Cartes et méthodes d'authentification autorisées
+// 3️⃣ Cartes et méthodes d'authentification autorisées
 const allowedCardNetworks = ["VISA", "MASTERCARD"];
 const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
 
-// ✅ 4️⃣ Configuration de la tokenisation pour SumUp
+// 4️⃣ Configuration de la tokenisation pour SumUp
 const tokenizationSpecification = {
-  type: "PAYMENT_GATEWAY",
+  type: 'PAYMENT_GATEWAY',
   parameters: {
-    gateway: "sumup",
-    gatewayMerchantId: "MC797RN3", // Remplace avec ton Merchant ID SumUp
-  },
+    gateway: 'sumup',
+    gatewayMerchantId: 'MC797RN3' // ✅ Remplacé par ton vrai merchant ID
+  }
 };
 
-// ✅ 5️⃣ Définition des méthodes de paiement autorisées
+// 5️⃣ Définition des méthodes de paiement autorisées
 const allowedPaymentMethods = [
   {
-    type: "CARD",
+    type: 'CARD',
     parameters: {
       allowedAuthMethods: allowedCardAuthMethods,
       allowedCardNetworks: allowedCardNetworks,
     },
     tokenizationSpecification: tokenizationSpecification,
-  },
+  }
 ];
 
-// ✅ 6️⃣ Déclaration du client Google Pay (initialisé après le chargement du SDK)
+// 6️⃣ Initialisation du client Google Pay
 let paymentsClient = null;
-
-// ✅ 7️⃣ Fonction qui s'exécute APRES le chargement du SDK Google Pay
-function onGooglePayLoaded() {
-  console.log("✅ Google Pay SDK chargé !");
-  checkGooglePayAvailability();
-}
-
-// ✅ 8️⃣ Fonction qui initialise Google Pay uniquement après le chargement du SDK
 function getGooglePaymentsClient() {
-  if (!window.google || !window.google.payments) {
-    console.error("❌ L'API Google Pay n'est pas disponible !");
-    return null;
-  }
-
   if (paymentsClient === null) {
     console.log("📌 Initialisation de Google PaymentsClient...");
     try {
       paymentsClient = new google.payments.api.PaymentsClient({
-        environment: "TEST",
+        environment: 'TEST', // ✅ Passé en production
         merchantInfo: {
           merchantName: "Louqo",
-          merchantId: "BCR2DN4T777KLZBX", // Remplace avec ton vrai Merchant ID
-        },
+          merchantId: "BCR2DN4T777KLZBX" // ✅ Ton vrai merchant ID
+        }
       });
     } catch (error) {
       console.error("❌ Erreur lors de l'initialisation de Google Pay :", error);
@@ -68,7 +55,7 @@ function getGooglePaymentsClient() {
   return paymentsClient;
 }
 
-// ✅ 9️⃣ Vérifier si Google Pay est disponible
+// 7️⃣ Vérifier si Google Pay est disponible pour pré-remplir les champs de carte
 function checkGooglePayAvailability() {
   console.log("🔎 Vérification de Google Pay...");
 
@@ -78,63 +65,35 @@ function checkGooglePayAvailability() {
     return;
   }
 
-  client
-    .isReadyToPay({
-      apiVersion: 2,
-      apiVersionMinor: 0,
-      allowedPaymentMethods: allowedPaymentMethods,
-    })
-    .then(function (response) {
-      console.log("🔍 Réponse Google Pay :", response);
+  client.isReadyToPay({
+    apiVersion: 2,
+    apiVersionMinor: 0,
+    allowedPaymentMethods: allowedPaymentMethods
+  })
+  .then(function(response) {
+    console.log("🔍 Réponse Google Pay :", response);
 
-      if (response.result) {
-        console.log("✅ Google Pay est disponible. Ajout du bouton...");
-        displayGooglePayButton();
-      } else {
-        console.warn("❌ Google Pay non disponible sur ce navigateur.");
-      }
-    })
-    .catch(function (err) {
-      console.error("❌ Erreur lors de la vérification de Google Pay :", err);
-    });
-}
+    if (response.result) {
+      console.log("✅ Google Pay est disponible. Pré-remplissage activé.");
 
-// ✅ 🔟 Affichage du bouton Google Pay après confirmation de disponibilité
-function displayGooglePayButton() {
-  console.log("📌 Affichage du bouton Google Pay...");
-
-  let container = document.getElementById("googlePayButtonContainer");
-
-  if (!container) {
-    console.error("❌ Conteneur du bouton Google Pay introuvable. Vérification dans 500ms...");
-    setTimeout(displayGooglePayButton, 500); // Réessaye après 500ms
-    return;
-  }
-
-  const client = getGooglePaymentsClient();
-  if (!client) {
-    console.error("❌ Google Pay client non initialisé.");
-    return;
-  }
-
-  const button = client.createButton({
-    onClick: function () {
-      console.log("🛒 Clic sur le bouton Google Pay !");
-      processGooglePayPayment();
-    },
+      // ✅ Auto-remplissage des champs carte via Google Pay
+      autofillCardDetails();
+    } else {
+      console.warn("❌ Google Pay non disponible sur ce navigateur.");
+    }
+  })
+  .catch(function(err) {
+    console.error("❌ Erreur lors de la vérification de Google Pay :", err);
   });
-
-  container.innerHTML = ""; // Nettoie le conteneur avant d'ajouter le bouton
-  container.appendChild(button);
 }
 
-// ✅ 1️⃣1️⃣ Simulation de paiement Google Pay
-function processGooglePayPayment() {
-  console.log("🚀 Paiement Google Pay en cours...");
+// 8️⃣ Récupère et pré-remplit les informations de carte bancaire
+function autofillCardDetails() {
+  console.log("📝 Demande d'auto-remplissage des cartes...");
 
   const client = getGooglePaymentsClient();
   if (!client) {
-    console.error("❌ Google Pay client non initialisé.");
+    console.error("❌ Google Pay Client non initialisé.");
     return;
   }
 
@@ -143,28 +102,33 @@ function processGooglePayPayment() {
     allowedPaymentMethods: allowedPaymentMethods,
     merchantInfo: {
       merchantName: "Louqo",
-      merchantId: "BCR2DN4T777KLZBX",
+      merchantId: "BCR2DN4T777KLZBX"
     },
     transactionInfo: {
-      totalPriceStatus: "FINAL",
-      totalPrice: "1.00", // À adapter dynamiquement
-      currencyCode: "EUR",
-    },
+      totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
+      currencyCode: 'EUR'
+    }
   };
 
-  client
-    .loadPaymentData(paymentDataRequest)
-    .then(function (paymentData) {
-      console.log("✅ Paiement Google Pay réussi :", paymentData);
-      alert("Paiement réussi !");
-    })
-    .catch(function (err) {
-      console.warn("⚠️ Paiement Google Pay annulé ou échoué :", err);
-    });
+  client.loadPaymentData(paymentDataRequest)
+  .then(function(paymentData) {
+    console.log("✅ Données de paiement Google Pay reçues :", paymentData);
+    
+    const cardInfo = paymentData.paymentMethodData.info;
+    const billingAddress = cardInfo.billingAddress;
+
+    // ✅ Pré-remplissage des champs du formulaire
+    document.getElementById("cardNumber").value = cardInfo.cardDetails || "";
+    document.getElementById("cardNetwork").value = cardInfo.cardNetwork || "";
+    document.getElementById("cardName").value = billingAddress.name || "";
+    document.getElementById("cardExpiry").value = billingAddress.expirationMonth + "/" + billingAddress.expirationYear || "";
+    
+    console.log("🎯 Champs de carte pré-remplis !");
+  })
+  .catch(function(err) {
+    console.warn("⚠️ Impossible de pré-remplir les champs avec Google Pay :", err);
+  });
 }
 
-// ✅ Forcer l'exécution après le chargement du DOM
-document.addEventListener("DOMContentLoaded", function () {
-  console.log("✅ DOM entièrement chargé, lancement de checkGooglePayAvailability...");
-  checkGooglePayAvailability();
-});
+// 🔟 Expose la fonction globalement pour que Flutter puisse l’appeler
+window.checkGooglePayAvailability = checkGooglePayAvailability;
