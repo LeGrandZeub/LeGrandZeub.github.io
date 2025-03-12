@@ -11,8 +11,8 @@ const RESOURCES = {"assets/AssetManifest.bin": "a07539d053e4313ec7f7cda48ff27daf
 "assets/assets/images/logo_louqo.png": "d6e7f9d87cd097eed5aa29ecc4c6f69b",
 "assets/assets/images/qr_overlay.png": "dafd6fb7da7326b6df27f26f591eedf5",
 "assets/FontManifest.json": "1ee00d31df7d0b30bfafc1cf4922abf8",
-"assets/fonts/MaterialIcons-Regular.otf": "a9df79b027a9d15bb89a119ca685cb86",
-"assets/NOTICES": "3b81f384b7813f66027f43fdc0fde136",
+"assets/fonts/MaterialIcons-Regular.otf": "a7d65cbddea88919868b5aee6c9b16c6",
+"assets/NOTICES": "b18851111e4cfd212cc7d497ae959ae3",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "e986ebe42ef785b27164c36a9abc7818",
 "assets/packages/lucide_icons/assets/lucide.ttf": "f204ec22fa2dba2fb9e3e57c4800bc15",
 "assets/packages/wakelock_plus/assets/no_sleep.js": "7748a45cd593f33280669b29c2c8919a",
@@ -31,7 +31,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "a07539d053e4313ec7f7cda48ff27daf
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "firebase-messaging-sw.js": "08df29dcf5342ebf105046672f54a608",
 "flutter.js": "f393d3c16b631f36852323de8e583132",
-"flutter_bootstrap.js": "790c627b0556a505d19f40ec252af5dc",
+"flutter_bootstrap.js": "b37e23e95176a1093d0f27b2796d96fc",
 "google_pay.js": "9514602538cbd5f7780600c0844026ae",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
@@ -39,7 +39,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "a07539d053e4313ec7f7cda48ff27daf
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
 "index.html": "f929c9c16eba7b52c2b952086d937df5",
 "/": "f929c9c16eba7b52c2b952086d937df5",
-"main.dart.js": "a1810961e50648cd8d64127a7f46f5cd",
+"main.dart.js": "47062aee1376f0c84f4a6209feac7341",
 "manifest.json": "95f9c632329be8cc96133b633cfc390a",
 "version.json": "00a6b2f5928cc030e03849eca5c4f699"};
 // The application shell files that are downloaded before a service worker can
