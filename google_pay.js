@@ -130,5 +130,75 @@ function autofillCardDetails() {
   });
 }
 
+function launchGooglePay(totalPrice) {
+  console.log("🛒 Lancement de Google Pay avec montant :", parseFloat(totalPrice).toFixed(2));
+
+  const client = getGooglePaymentsClient();
+  if (!client) {
+    console.error("❌ Google Pay Client non initialisé.");
+    return;
+  }
+
+  const paymentDataRequest = {
+    ...baseRequest,
+    allowedPaymentMethods: allowedPaymentMethods,
+    merchantInfo: {
+      merchantName: "Louqo",
+      merchantId: "BCR2DN4T777KLZBX"
+    },
+    transactionInfo: {
+      totalPriceStatus: 'FINAL',
+      totalPrice: parseFloat(totalPrice).toFixed(2), // ✅ Vérification du format
+      currencyCode: 'EUR'
+    }
+  };
+
+  client.loadPaymentData(paymentDataRequest)
+    .then(function(paymentData) {
+
+      if (!paymentData || !paymentData.paymentMethodData || 
+          !paymentData.paymentMethodData.tokenizationData || 
+          !paymentData.paymentMethodData.tokenizationData.token) {
+        console.error("❌ Erreur : Token Google Pay introuvable !");
+        return;
+      }
+
+      const rawToken = paymentData.paymentMethodData.tokenizationData.token;
+      console.log("🔍 Raw Token JSON :", rawToken);
+
+      // 🔥 Vérifie que rawToken est bien un JSON et extrait `signedMessage`
+      let parsedToken;
+      try {
+        parsedToken = JSON.parse(rawToken);
+        console.log("📦 Token JSON bien parsé :", parsedToken);
+      } catch (error) {
+        console.error("❌ Erreur lors du parsing du token JSON :", error);
+      }
+
+      const paymentToken = parsedToken ? parsedToken.signedMessage : null;
+
+      if (!paymentToken) {
+        console.error("❌ Erreur : Impossible d'extraire `signedMessage` du token !");
+        return;
+      }
+
+      console.log("🔑 Token Google Pay extrait :", paymentToken);
+
+      if (window.postMessage) {
+        console.log("📡 Envoi du token à Flutter via postMessage :", JSON.stringify(paymentToken));
+        window.postMessage({ type: "paymentSuccess", token: JSON.stringify(paymentToken) }, "*");
+      } else {
+        console.error("❌ Erreur : Impossible d'envoyer le token à Flutter.");
+      }
+    })
+    .catch(function(err) {
+      console.warn("⚠️ Paiement annulé ou échoué :", err);
+    });
+}
+
+// 🔟 Expose la fonction pour Flutter
+window.launchGooglePay = launchGooglePay;
+
+
 // 🔟 Expose la fonction globalement pour que Flutter puisse l’appeler
 window.checkGooglePayAvailability = checkGooglePayAvailability;
