@@ -42,31 +42,6 @@
   <!-- ✅ Fichier Google Pay JS après le SDK -->
   <script src="google_pay.js"></script>
 
-  <!-- ✅ Initialisation Firebase -->
-  <script>
-    var firebaseConfig = {
-      apiKey: "AIzaSyCq3vbwnUxKzARVJf9hv2FZw-n0fkdWUCg",
-      authDomain: "louqo-77593.firebaseapp.com",
-      projectId: "louqo-77593",
-      storageBucket: "louqo-77593.firebasestorage.app",
-      messagingSenderId: "489535153042",
-      appId: "1:489535153042:web:49ce6e1e4052d226abd74b",
-      measurementId: "G-FSTVLHXZ6T"
-    };
-
-    // 📌 Initialisation Firebase
-    firebase.initializeApp(firebaseConfig);
-
-    // 📩 Initialisation de Firebase Messaging pour les notifications
-    if (firebase.messaging.isSupported()) {
-      const messaging = firebase.messaging();
-      messaging.onMessage((payload) => {
-        console.log("📩 Notification reçue :", payload);
-      });
-    } else {
-      console.warn("❌ Firebase Messaging non supporté sur ce navigateur.");
-    }
-  </script>
 
   <!-- ✅ Enregistrement et mise à jour automatique du Service Worker -->
   <script>
