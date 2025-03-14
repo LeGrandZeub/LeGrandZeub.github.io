@@ -25,7 +25,7 @@ messaging.onBackgroundMessage((payload) => {
     body: payload.notification?.body || "Vous avez une nouvelle notification.",
     icon: "/icons/Icon-192.png"  // Vérifiez que ce chemin est correct
   };
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  //self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 // Gérer l'événement de clic sur la notification
