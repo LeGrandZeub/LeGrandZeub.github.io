@@ -53,38 +53,23 @@
       appId: "1:489535153042:web:49ce6e1e4052d226abd74b",
       measurementId: "G-FSTVLHXZ6T"
     };
-
-    // 📌 Initialisation Firebase
+  
+    // 📌 Initialisation Firebase (nécessaire pour le Service Worker)
     firebase.initializeApp(firebaseConfig);
-
-    // 📩 Initialisation de Firebase Messaging pour les notifications
-    if (firebase.messaging.isSupported()) {
-      const messaging = firebase.messaging();
-      messaging.onMessage((payload) => {
-        console.log("📩 Notification reçue :", payload);
-      });
-    } else {
-      console.warn("❌ Firebase Messaging non supporté sur ce navigateur.");
-    }
-  </script>
-
-  <!-- ✅ Enregistrement et mise à jour automatique du Service Worker -->
-  <script>
+  
+    // ✅ Enregistrer le Service Worker pour gérer les notifications
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/firebase-messaging-sw.js')
-        .then(function(registration) {
-          console.log('✅ Service Worker enregistré avec succès:', registration.scope);
+        .then((registration) => {
+          console.log("✅ Service Worker enregistré avec succès :", registration);
         })
-        .catch(function(error) {
-          console.error('❌ Échec de l\'enregistrement du Service Worker:', error);
+        .catch((error) => {
+          console.error("❌ Erreur d'enregistrement du Service Worker :", error);
         });
-
-      // ✅ Mise à jour automatique du Service Worker
-      navigator.serviceWorker.ready.then(function(registration) {
-        registration.update();
-      });
+    } else {
+      console.warn("❌ Les Service Workers ne sont pas supportés sur ce navigateur.");
     }
-  </script>
+    </script> 
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
