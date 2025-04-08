@@ -18,7 +18,7 @@ const tokenizationSpecification = {
   type: 'PAYMENT_GATEWAY',
   parameters: {
     gateway: 'sumup',
-    gatewayMerchantId: 'MC797RN3' // ✅ Remplacé par ton vrai merchant ID
+    gatewayMerchantId: 'M7D76C3A' // ✅ Remplacé par ton vrai merchant ID
   }
 };
 
@@ -41,7 +41,7 @@ function getGooglePaymentsClient() {
     console.log("📌 Initialisation de Google PaymentsClient...");
     try {
       paymentsClient = new google.payments.api.PaymentsClient({
-        environment: 'TEST', // ✅ Passé en production
+        environment: 'PRODUCTION', // ✅ Passé en production
         merchantInfo: {
           merchantName: "Louqo",
           merchantId: "BCR2DN4T777KLZBX" // ✅ Ton vrai merchant ID
