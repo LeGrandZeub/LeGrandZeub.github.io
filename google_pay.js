@@ -184,12 +184,39 @@ function launchGooglePay(totalPrice) {
 
       console.log("🔑 Token Google Pay extrait :", paymentToken);
 
-      if (window.postMessage) {
-        console.log("📡 Envoi du token à Flutter via postMessage :", JSON.stringify(paymentToken));
-        window.postMessage({ type: "paymentSuccess", token: JSON.stringify(paymentToken) }, "*");
-      } else {
-        console.error("❌ Erreur : Impossible d'envoyer le token à Flutter.");
-      }
+      // 🧾 Envoi du token au back-end pour validation du paiement via SumUp
+      fetch("/api/payments/googlepay", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          googlePayToken: paymentToken,
+          amount: parseFloat(totalPrice).toFixed(2),
+          currency: "EUR"
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            console.log("✅ Paiement validé par SumUp :", data);
+            if (window.postMessage) {
+              window.postMessage({ type: "paymentSuccess", token: JSON.stringify(paymentToken) }, "*");
+            }
+          } else {
+            console.error("❌ Erreur de paiement confirmée par SumUp :", data.error);
+            if (window.postMessage) {
+              window.postMessage({ type: "paymentError", error: data.error }, "*");
+            }
+          }
+        })
+        .catch(error => {
+          console.error("❌ Erreur réseau ou serveur pendant validation SumUp :", error);
+          if (window.postMessage) {
+            window.postMessage({ type: "paymentError", error: error.message }, "*");
+          }
+        });
+
     })
     .catch(function(err) {
       console.warn("⚠️ Paiement annulé ou échoué :", err);
