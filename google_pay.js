@@ -185,7 +185,7 @@ function launchGooglePay(totalPrice) {
       console.log("🔑 Token Google Pay extrait :", paymentToken);
 
       // 🧾 Envoi du token au back-end pour validation du paiement via SumUp
-      fetch("/api/payments/googlepay", {
+      fetch("https://api.louqo.com/payments/googlepay", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -201,7 +201,7 @@ function launchGooglePay(totalPrice) {
           if (data.success) {
             console.log("✅ Paiement validé par SumUp :", data);
             if (window.postMessage) {
-              window.postMessage({ type: "paymentSuccess", token: JSON.stringify(paymentToken) }, "*");
+              window.postMessage({ type: "paymentTokenReady", token: paymentToken }, "*");
             }
           } else {
             console.error("❌ Erreur de paiement confirmée par SumUp :", data.error);
