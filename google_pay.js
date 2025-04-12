@@ -191,7 +191,7 @@ function launchGooglePay(totalPrice) {
 
       // ✅ Envoi à Flutter via postMessage
       if (window.postMessage) {
-        window.postMessage({ type: "paymentTokenReady", token: paymentToken }, "*");
+        window.postMessage({ type: "paymentTokenReady", googlePayData: paymentData }, "*");
       }
     })
     .catch(function (err) {
