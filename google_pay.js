@@ -148,16 +148,15 @@ function launchGooglePay(totalPrice) {
     },
     transactionInfo: {
       totalPriceStatus: 'FINAL',
-      totalPrice: parseFloat(totalPrice).toFixed(2), // ✅ Vérification du format
+      totalPrice: parseFloat(totalPrice).toFixed(2),
       currencyCode: 'EUR'
     }
   };
 
   client.loadPaymentData(paymentDataRequest)
-    .then(function(paymentData) {
-
-      if (!paymentData || !paymentData.paymentMethodData || 
-          !paymentData.paymentMethodData.tokenizationData || 
+    .then(function (paymentData) {
+      if (!paymentData || !paymentData.paymentMethodData ||
+          !paymentData.paymentMethodData.tokenizationData ||
           !paymentData.paymentMethodData.tokenizationData.token) {
         console.error("❌ Erreur : Token Google Pay introuvable !");
         return;
@@ -166,62 +165,43 @@ function launchGooglePay(totalPrice) {
       const rawToken = paymentData.paymentMethodData.tokenizationData.token;
       console.log("🔍 Raw Token JSON :", rawToken);
 
-      // 🔥 Vérifie que rawToken est bien un JSON et extrait `signedMessage`
       let parsedToken;
       try {
         parsedToken = JSON.parse(rawToken);
         console.log("📦 Token JSON bien parsé :", parsedToken);
       } catch (error) {
         console.error("❌ Erreur lors du parsing du token JSON :", error);
+        if (window.postMessage) {
+          window.postMessage({ type: "paymentError", error: error.message }, "*");
+        }
+        return;
       }
 
-      const paymentToken = parsedToken ? parsedToken.signedMessage : null;
+      const paymentToken = parsedToken?.signedMessage;
 
       if (!paymentToken) {
         console.error("❌ Erreur : Impossible d'extraire `signedMessage` du token !");
+        if (window.postMessage) {
+          window.postMessage({ type: "paymentError", error: "Token incomplet ou malformé" }, "*");
+        }
         return;
       }
 
       console.log("🔑 Token Google Pay extrait :", paymentToken);
 
-      // 🧾 Envoi du token au back-end pour validation du paiement via SumUp
-      fetch("https://api.louqo.com/payments/googlepay", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          googlePayToken: paymentToken,
-          amount: parseFloat(totalPrice).toFixed(2),
-          currency: "EUR"
-        })
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            console.log("✅ Paiement validé par SumUp :", data);
-            if (window.postMessage) {
-              window.postMessage({ type: "paymentTokenReady", token: paymentToken }, "*");
-            }
-          } else {
-            console.error("❌ Erreur de paiement confirmée par SumUp :", data.error);
-            if (window.postMessage) {
-              window.postMessage({ type: "paymentError", error: data.error }, "*");
-            }
-          }
-        })
-        .catch(error => {
-          console.error("❌ Erreur réseau ou serveur pendant validation SumUp :", error);
-          if (window.postMessage) {
-            window.postMessage({ type: "paymentError", error: error.message }, "*");
-          }
-        });
-
+      // ✅ Envoi à Flutter via postMessage
+      if (window.postMessage) {
+        window.postMessage({ type: "paymentTokenReady", token: paymentToken }, "*");
+      }
     })
-    .catch(function(err) {
+    .catch(function (err) {
       console.warn("⚠️ Paiement annulé ou échoué :", err);
+      if (window.postMessage) {
+        window.postMessage({ type: "paymentError", error: err.message }, "*");
+      }
     });
 }
+
 
 // 🔟 Expose la fonction pour Flutter
 window.launchGooglePay = launchGooglePay;
