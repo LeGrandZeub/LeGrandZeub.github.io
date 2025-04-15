@@ -140,17 +140,38 @@ function launchGooglePay(totalPrice) {
   }
 
   const paymentDataRequest = {
-    ...baseRequest,
-    allowedPaymentMethods: allowedPaymentMethods,
+    apiVersion: 2,
+    apiVersionMinor: 0,
     merchantInfo: {
-      merchantName: "Louqo",
-      merchantId: "BCR2DN4T777KLZBX"
+      merchantName: "Louqo"
     },
-    transactionInfo: {
-      totalPriceStatus: 'FINAL',
-      totalPrice: parseFloat(totalPrice).toFixed(2),
-      currencyCode: 'EUR'
-    }
+    allowedPaymentMethods: [
+      {
+        type: 'CARD',
+        parameters: {
+          allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+          allowedCardNetworks: ['MASTERCARD', 'VISA']
+        },
+        tokenizationSpecification: {
+          type: 'PAYMENT_GATEWAY',
+          parameters: {
+            gateway: 'sumup',
+            gatewayMerchantId: 'M7D76C3A'
+          }
+        },
+        merchantInfo: {
+          merchantId: 'BCR2DN4T777KLZBX',
+          merchantName: 'Louqo'
+        },
+        transactionInfo: {
+          totalPriceStatus: 'FINAL',
+          totalPriceLabel: 'Total',
+          totalPrice: parseFloat(totalPrice).toFixed(2),
+          currencyCode: 'EUR',
+          countryCode: 'FR'
+        }
+      }
+    ]
   };
 
   client.loadPaymentData(paymentDataRequest)
@@ -201,6 +222,7 @@ function launchGooglePay(totalPrice) {
       }
     });
 }
+
 
 
 // 🔟 Expose la fonction pour Flutter
