@@ -12,8 +12,8 @@ const RESOURCES = {"assets/AssetManifest.bin": "c4d4189579f7e059765b099b41517702
 "assets/assets/images/logo_louqo.png": "d6e7f9d87cd097eed5aa29ecc4c6f69b",
 "assets/assets/images/qr_overlay.png": "dafd6fb7da7326b6df27f26f591eedf5",
 "assets/FontManifest.json": "1ee00d31df7d0b30bfafc1cf4922abf8",
-"assets/fonts/MaterialIcons-Regular.otf": "c3272382803ce3279fe1c69ca3eb94fa",
-"assets/NOTICES": "b18851111e4cfd212cc7d497ae959ae3",
+"assets/fonts/MaterialIcons-Regular.otf": "2da75c8c8ae29029ce0e886ea6bada6f",
+"assets/NOTICES": "ecd5678640e24c2f845e0e4e798be062",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "e986ebe42ef785b27164c36a9abc7818",
 "assets/packages/lucide_icons/assets/lucide.ttf": "f204ec22fa2dba2fb9e3e57c4800bc15",
 "assets/packages/wakelock_plus/assets/no_sleep.js": "7748a45cd593f33280669b29c2c8919a",
@@ -32,7 +32,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "c4d4189579f7e059765b099b41517702
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "firebase-messaging-sw.js": "36bbdb55b86d5fdbce74cdb7356e8eb6",
 "flutter.js": "f393d3c16b631f36852323de8e583132",
-"flutter_bootstrap.js": "f7a86681d419059e6367ced0670f7f72",
+"flutter_bootstrap.js": "9422fad29e44239f299667e7e202b486",
 "google_pay.js": "75145ff8961307325abff21ac71fa2cf",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
@@ -40,7 +40,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "c4d4189579f7e059765b099b41517702
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
 "index.html": "c9968bf99d4116d59341b5ad24c34930",
 "/": "c9968bf99d4116d59341b5ad24c34930",
-"main.dart.js": "cef96953b43cfd7a202480327d59ca83",
+"main.dart.js": "fa42f8996caf605adffcfdad53bf873c",
 "manifest.json": "95f9c632329be8cc96133b633cfc390a",
 "version.json": "00a6b2f5928cc030e03849eca5c4f699"};
 // The application shell files that are downloaded before a service worker can
