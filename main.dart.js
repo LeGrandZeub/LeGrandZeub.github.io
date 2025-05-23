@@ -91182,12 +91182,12 @@ g=n.e
 f=n.c
 f.toString
 s=7
-return A.m(g.fs(0,f,"GET","/groups/my"),$async$qf)
+return A.m(g.fs(0,f,"GET","/groups/all"),$async$qf)
 case 7:m=b
 f=n.c
 f.toString
 s=8
-return A.m(g.fs(0,f,"GET","/friends/my"),$async$qf)
+return A.m(g.fs(0,f,"GET","/friends/list"),$async$qf)
 case 8:l=b
 if(n.c==null){s=1
 break}g=t.j
