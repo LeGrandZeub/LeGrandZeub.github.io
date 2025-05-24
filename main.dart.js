@@ -27154,7 +27154,7 @@ _.cy=g
 _.db=null
 _.dx=h
 _.dy=i
-_.fr=null
+_.fx=_.fr=null
 _.cG$=j
 _.aL$=k
 _.c=_.a=null},
@@ -91468,10 +91468,12 @@ s.O(new A.aqQ(s,this.b,this.c))
 s.Px()},
 $S:13}
 A.aqQ.prototype={
-$0(){this.a.fr=this.b},
+$0(){var s=this.a
+s.fr=this.b
+s.fx=this.c},
 $S:0}
 A.aqo.prototype={
-$1(a){return J.d(J.Q(a,"standId"),this.a.fr)},
+$1(a){return J.d(J.Q(a,"stand"),this.a.fx)},
 $S:118}
 A.aqq.prototype={
 $1(a){return A.b_(J.Q(a,"category"))},
