@@ -93547,8 +93547,7 @@ return A.l(new A.dp(new A.cz()).ef(0,o,"GET","/group-orders/"+l),$async$mi)
 case 6:k=b3
 if(k==null){s=1
 break}o=J.U(k)
-j=o.h(k,"barId")
-if(j==null)j=""
+j=t.f.b(o.h(k,"barId"))?J.P(o.h(k,"barId"),"_id"):o.h(k,"barId")
 i=t.j
 h=t.z
 g=t.N
