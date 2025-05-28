@@ -93934,9 +93934,9 @@ break}l=J.K(m,"_id")
 k=J.K(m,"status")
 j=J.K(m,"checkoutId")
 i=J.K(m,"userId")
-h=l!=null&&!J.d(k,"completed")&&j!=null&&i!=null
+h=l!=null&&!J.d(k,"completed")&&i!=null
 if(h){A.al("\ud83d\udea8 Redirection vers AttenteParticipantsPage pour la commande "+A.i(l))
-$.ae.R8$.push(new A.ayx(n,l,j,i))
+$.ae.R8$.push(new A.ayx(n,l,i,j))
 s=1
 break}else{A.al("\u26a0\ufe0f Donn\xe9es incompl\xe8tes pour redirection. Initialisation classique.")
 n.kk()}p=2
@@ -94109,8 +94109,7 @@ q.toString
 s=this.b
 s.toString
 r=this.c
-r.toString
-return new A.lG(q,s,r,null)},
+return new A.lG(q,r==null?"":r,s,null)},
 $S:229}
 A.ayP.prototype={
 $0(){this.a.Q=[]},
