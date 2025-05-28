@@ -94214,11 +94214,13 @@ var $async$u3=A.x(function(a3,a4){if(a3===1){o=a4
 s=p}while(true)switch(s){case 0:p=4
 A.ap("\ud83d\udd0d Traitement du message re\xe7u dans _handlePaymentResponse: "+a2)
 m=B.a1.j1(0,a2,null)
-l=J.L(J.L(m,"body"),"status")
+if(!J.d(J.L(m,"type"),"success")||J.L(m,"body")==null){A.ap("\u26a0\ufe0f Message incomplet ou invalide. Ignor\xe9.")
+s=1
+break}l=J.L(J.L(m,"body"),"status")
 if(J.d(l,"FAILED")){if(n.e){e=n.c
 e.toString
 A.kV(e,"\u274c Paiement refus\xe9. V\xe9rifie ta carte ou r\xe9essaie.",!1,null)}s=1
-break}if(!J.d(l,"PAID")){A.ap("\u26a0\ufe0f Paiement non reconnu ou incomplet. Ignor\xe9.")
+break}if(!J.d(l,"PAID")){A.ap("\u26a0\ufe0f Paiement non reconnu ou incomplet (status: "+A.i(l)+"). Ignor\xe9.")
 s=1
 break}if(n.r){A.ap("\ud83d\udd01 Paiement d\xe9j\xe0 trait\xe9. Ignor\xe9.")
 s=1
