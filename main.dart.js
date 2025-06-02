@@ -91294,7 +91294,7 @@ j=n.a.d
 i=n.c
 i.toString
 s=7
-return A.l(J.lF(m,i,"GET","payments/check-payment-status/"+j),$async$tI)
+return A.l(J.lF(m,i,"GET","/payments/check-payment-status/"+j),$async$tI)
 case 7:l=b
 s=l!=null&&J.d(J.J(l,"status"),"PAID")?8:9
 break
@@ -93971,7 +93971,7 @@ g=A.i(l)
 f=n.c
 f.toString
 s=9
-return A.l(new A.cu(new A.bY()).dv(0,f,"GET","payments/check-payment-status/"+g),$async$nI)
+return A.l(new A.cu(new A.bY()).dv(0,f,"GET","/payments/check-payment-status/"+g),$async$nI)
 case 9:i=b
 if(i==null||!J.d(J.J(i,"status"),"PAID")){s=1
 break}A.aj("\ud83d\udcb3 Paiement d\xe9tect\xe9 comme PAID apr\xe8s redirection. Envoi \xe0 /pay...")
