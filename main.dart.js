@@ -92022,10 +92022,9 @@ p.zg().bi(new A.arY(p),t.P)
 s.Y(0,r)},
 ajY(){var s=this,r=s.Q,q=r.gaR(0).at
 q.toString
-if(q>50&&s.go)s.L(new A.ars(s))
-else{r=r.gaR(0).at
+if(q>50){if(s.go||!s.as)s.L(new A.ars(s))}else{r=r.gaR(0).at
 r.toString
-if(r<=0&&!s.go)s.L(new A.art(s))}},
+if(r<=0)if(!s.go||s.as)s.L(new A.art(s))}},
 zg(){var s=0,r=A.w(t.H),q=this,p,o
 var $async$zg=A.x(function(a,b){if(a===1)return A.t(b,r)
 while(true)switch(s){case 0:s=2
@@ -92308,7 +92307,9 @@ return A.u(null,r)}})
 return A.v($async$$1,r)},
 $S:151}
 A.ars.prototype={
-$0(){return this.a.go=!1},
+$0(){var s=this.a
+s.go=!1
+s.as=!0},
 $S:0}
 A.art.prototype={
 $0(){var s=this.a
