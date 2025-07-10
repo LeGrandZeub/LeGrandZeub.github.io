@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Paiement par carte</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 30px;
+        background-color: #f9f9f9;
+        max-width: 500px;
+        margin: auto;
+      }
+      #card-element {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 6px;
+        background: white;
+        margin-bottom: 20px;
+      }
+      #submit-button {
+        background-color: #6772e5;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Paiement sécurisé</h2>
+    <form id="payment-form">
+      <div id="card-element"></div>
+      <button id="submit-button" type="submit">Payer</button>
+    </form>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const clientSecret = urlParams.get('secret');
+      const allowedOrigin = window.location.origin;
+
+      const stripe = Stripe('pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu');
+      const elements = stripe.elements();
+      const card = elements.create('card');
+      card.mount('#card-element');
+
+      const form = document.getElementById('payment-form');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: card
+          }
+        });
+
+        if (error) {
+          console.error('Erreur Stripe :', error.message);
+          window.parent.postMessage({ type: 'paymentError', error: error.message }, allowedOrigin);
+        } else if (paymentIntent.status === 'succeeded') {
+          console.log('✅ Paiement réussi !');
+          window.parent.postMessage({ type: 'paymentTokenReady', paymentIntentId: paymentIntent.id }, allowedOrigin);
+        }
+      });
+    </script>
+  </body>
+</html>
