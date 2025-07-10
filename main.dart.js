@@ -94410,7 +94410,7 @@ g=A.ak(["amount",n.In(),"currency","eur"],g,h)
 f=n.c
 f.toString
 s=7
-return A.l(J.pS(l,g,f,"POST","payments/create-payment-intent"),$async$uE)
+return A.l(J.pS(l,g,f,"POST","/payments/create-payment-intent"),$async$uE)
 case 7:k=b
 j=J.M(k,"clientSecret")
 f=n.c
@@ -94664,7 +94664,7 @@ g=o.c
 g.toString
 f=t.z
 s=9
-return A.l(J.pS(l,A.ak(["amount",m,"currency","eur"],t.N,f),g,"POST","payments/create-payment-intent"),$async$uD)
+return A.l(J.pS(l,A.ak(["amount",m,"currency","eur"],t.N,f),g,"POST","/payments/create-payment-intent"),$async$uD)
 case 9:k=b
 if(k==null||!J.nu(k,"clientSecret")){g=A.dL("R\xe9ponse invalide du serveur")
 throw A.c(g)}j=J.M(k,"clientSecret")
