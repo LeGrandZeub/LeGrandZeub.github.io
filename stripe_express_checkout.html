@@ -2,32 +2,30 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- ✅ OBLIGATOIRE -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Paiement Louqo</title>
   <script src="https://js.stripe.com/v3/"></script>
   <style>
     body {
+      font-family: sans-serif;
       margin: 0;
       padding: 0;
-      font-family: sans-serif;
+      background: #f7f7f7;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       height: 100vh;
-      background-color: #f7f7f7;
     }
-
     #checkout-container {
       width: 100%;
       max-width: 500px;
+      background: white;
       padding: 24px;
-      box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
-      background-color: white;
       border-radius: 12px;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
     }
-
     #status {
-      margin-top: 24px;
+      margin-top: 20px;
       text-align: center;
       font-size: 16px;
       color: #333;
@@ -44,8 +42,7 @@
 
   <script>
     (async () => {
-      const stripe = Stripe("pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu"); // ✅ Ta clé publique Stripe
-
+      const stripe = Stripe("pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu");
       const urlParams = new URLSearchParams(window.location.search);
       const clientSecret = urlParams.get("secret");
 
@@ -57,21 +54,16 @@
       const appearance = { theme: 'stripe' };
       const elements = stripe.elements({ clientSecret, appearance });
 
-      // ✅ Corrigé : layout doit être un objet
       const expressCheckoutElement = elements.create("expressCheckout", {
-        layout: { type: "tabs" }  // ✅ Correct format
+        paymentMethodOrder: ['apple_pay', 'google_pay'], // 👉 FORCÉ
       });
 
       expressCheckoutElement.mount("#express-checkout-element");
 
       const form = document.getElementById("payment-form");
-
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const { error } = await stripe.confirmPayment({
-          elements,
-          confirmParams: {},
-        });
+        const { error } = await stripe.confirmPayment({ elements, confirmParams: {} });
 
         if (error) {
           document.getElementById("status").innerText = `❌ ${error.message}`;
