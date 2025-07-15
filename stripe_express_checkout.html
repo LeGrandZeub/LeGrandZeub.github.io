@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Paiement Louqo</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f7f7f7;
+    }
+
+    #checkout-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 24px;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      border-radius: 12px;
+    }
+
+    #status {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div id="checkout-container">
+    <form id="payment-form">
+      <div id="express-checkout-element"></div>
+      <div id="status"></div>
+    </form>
+  </div>
+
+  <script>
+    (async () => {
+      const stripe = Stripe("pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu"); // Remplace avec ta clé publique Stripe
+      const urlParams = new URLSearchParams(window.location.search);
+      const clientSecret = urlParams.get("secret");
+
+      if (!clientSecret) {
+        document.getElementById("status").innerText = "❌ Client secret manquant.";
+        return;
+      }
+
+      const appearance = {
+        theme: 'stripe',
+      };
+
+      const elements = stripe.elements({ clientSecret, appearance });
+
+      const expressCheckoutElement = elements.create("expressCheckout", {
+        layout: "tabs", // Ou "accordion"
+      });
+
+      expressCheckoutElement.mount("#express-checkout-element");
+
+      const form = document.getElementById("payment-form");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const { error } = await stripe.confirmPayment({ elements, confirmParams: {} });
+
+        if (error) {
+          document.getElementById("status").innerText = `❌ ${error.message}`;
+          window.parent.postMessage({ type: "paymentError", error: error.message }, "*");
+        } else {
+          document.getElementById("status").innerText = "✅ Paiement validé !";
+          window.parent.postMessage({ type: "paymentSuccess" }, "*");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
