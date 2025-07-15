@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- ✅ OBLIGATOIRE -->
   <title>Paiement Louqo</title>
   <script src="https://js.stripe.com/v3/"></script>
   <style>
@@ -43,7 +44,8 @@
 
   <script>
     (async () => {
-      const stripe = Stripe("pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu"); // Remplace avec ta clé publique Stripe
+      const stripe = Stripe("pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu"); // ✅ Ta clé publique Stripe
+
       const urlParams = new URLSearchParams(window.location.search);
       const clientSecret = urlParams.get("secret");
 
@@ -52,14 +54,12 @@
         return;
       }
 
-      const appearance = {
-        theme: 'stripe',
-      };
-
+      const appearance = { theme: 'stripe' };
       const elements = stripe.elements({ clientSecret, appearance });
 
+      // ✅ Corrigé : layout doit être un objet
       const expressCheckoutElement = elements.create("expressCheckout", {
-        layout: "tabs", // Ou "accordion"
+        layout: { type: "tabs" }  // ✅ Correct format
       });
 
       expressCheckoutElement.mount("#express-checkout-element");
@@ -68,7 +68,10 @@
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const { error } = await stripe.confirmPayment({ elements, confirmParams: {} });
+        const { error } = await stripe.confirmPayment({
+          elements,
+          confirmParams: {},
+        });
 
         if (error) {
           document.getElementById("status").innerText = `❌ ${error.message}`;
