@@ -55,7 +55,11 @@
       const elements = stripe.elements({ clientSecret, appearance });
 
       const expressCheckoutElement = elements.create("expressCheckout", {
-        paymentMethodOrder: ['apple_pay', 'google_pay'], // 👉 FORCÉ
+        // ✅ Oblige Stripe à ne proposer QUE Google Pay
+        paymentMethodOrder: ['google_pay'],
+        googlePay: {
+          merchantId: 'BCR2DN6T5Z3...', // Facultatif en test, obligatoire en prod certifiée
+        },
       });
 
       expressCheckoutElement.mount("#express-checkout-element");
