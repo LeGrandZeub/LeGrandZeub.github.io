@@ -55,28 +55,55 @@
       const elements = stripe.elements({ clientSecret, appearance });
 
       const expressCheckoutElement = elements.create("expressCheckout", {
-        // ✅ Oblige Stripe à ne proposer QUE Google Pay
         paymentMethodOrder: ['google_pay'],
         googlePay: {
-          merchantId: 'BCR2DN4T777KLZBX', // Facultatif en test, obligatoire en prod certifiée
+          merchantId: 'BCR2DN4T777KLZBX',
         },
       });
 
       expressCheckoutElement.mount("#express-checkout-element");
 
       const form = document.getElementById("payment-form");
+
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const { error } = await stripe.confirmPayment({ elements, confirmParams: {} });
+        const { error } = await stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: window.location.href + '&redirected=true',
+          },
+        });
 
         if (error) {
           document.getElementById("status").innerText = `❌ ${error.message}`;
           window.parent.postMessage({ type: "paymentError", error: error.message }, "*");
-        } else {
-          document.getElementById("status").innerText = "✅ Paiement validé !";
-          window.parent.postMessage({ type: "paymentSuccess" }, "*");
         }
       });
+
+      // 🟡 Une fois redirigé par Stripe après paiement, vérifier le statut
+      const redirected = urlParams.get("redirected");
+      if (redirected) {
+        try {
+          const paymentIntentId = clientSecret.split('_secret')[0];
+          const res = await fetch(`/payments/check-payment-status/${clientSecret}`);
+          const data = await res.json();
+
+          if (data.status === 'succeeded') {
+            document.getElementById("status").innerText = "✅ Paiement validé !";
+            window.parent.postMessage({ type: "paymentSuccess" }, "*");
+          } else {
+            document.getElementById("status").innerText = `❌ Paiement échoué (${data.status})`;
+            window.parent.postMessage({ type: "paymentError", error: "Paiement échoué : " + data.status }, "*");
+
+            // Attendre un peu avant retour arrière
+            setTimeout(() => window.history.back(), 2000);
+          }
+        } catch (e) {
+          document.getElementById("status").innerText = "❌ Erreur de vérification du paiement.";
+          window.parent.postMessage({ type: "paymentError", error: "Erreur de vérification du paiement." }, "*");
+          setTimeout(() => window.history.back(), 2000);
+        }
+      }
     })();
   </script>
 </body>
