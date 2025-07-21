@@ -91962,7 +91962,7 @@ aqG(a,b,c,d,a0){var s=0,r=A.x(t.z),q,p=2,o,n=this,m,l,k,j,i,h,g,f,e
 var $async$ff=A.r(function(a1,a2){if(a1===1){o=a2
 s=p}while(true)switch(s){case 0:f=null
 a0=a0
-a0="https://api.louqo.com"+A.j(a0)
+a0="http://localhost:5000"+A.j(a0)
 p=4
 s=7
 return A.l(n.a.tf(),$async$ff)
