@@ -54,36 +54,55 @@
       const appearance = { theme: 'stripe' };
       const elements = stripe.elements({ clientSecret, appearance });
 
+      // Ordre : Apple Pay > Google Pay > Carte
       const expressCheckoutElement = elements.create("expressCheckout", {
-        paymentMethodOrder: ['google_pay'],
+        paymentMethodOrder: ['apple_pay', 'google_pay', 'card'],
         googlePay: {
           merchantId: 'BCR2DN4T777KLZBX',
+          environment: 'TEST', // changer en 'PRODUCTION' en prod
         },
+        // PAS de applePay ici, Stripe gère tout seul !
       });
 
       expressCheckoutElement.mount("#express-checkout-element");
+
+      // Gestion des erreurs visuelles Stripe Express Checkout
+      expressCheckoutElement.on('ready', function() {
+        console.log('ExpressCheckout prêt');
+      });
+      expressCheckoutElement.on('error', function(event) {
+        console.error('Erreur ExpressCheckout:', event.error);
+        document.getElementById("status").innerText = "❌ " + event.error.message;
+      });
 
       const form = document.getElementById("payment-form");
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const { error } = await stripe.confirmPayment({
-          elements,
-          confirmParams: {
-            return_url: window.location.href + '&redirected=true',
-          },
-        });
+        document.getElementById("status").innerText = "⏳ Paiement en cours...";
+        try {
+          const { error } = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+              return_url: window.location.href + '&redirected=true',
+            },
+          });
 
-        if (error) {
-          document.getElementById("status").innerText = `❌ ${error.message}`;
-          window.parent.postMessage({ type: "paymentError", error: error.message }, "*");
+          if (error) {
+            document.getElementById("status").innerText = `❌ ${error.message}`;
+            window.parent.postMessage({ type: "paymentError", error: error.message }, "*");
+          }
+        } catch (e) {
+          document.getElementById("status").innerText = "❌ Erreur inconnue.";
+          window.parent.postMessage({ type: "paymentError", error: "Erreur inconnue" }, "*");
         }
       });
 
-      // 🟡 Une fois redirigé par Stripe après paiement, vérifier le statut
+      // Après redirection Stripe, vérifier le statut
       const redirected = urlParams.get("redirected");
       if (redirected) {
         try {
+          document.getElementById("status").innerText = "⏳ Vérification du paiement...";
           const paymentIntentId = clientSecret.split('_secret')[0];
           const res = await fetch(`/payments/check-payment-status/${clientSecret}`);
           const data = await res.json();
@@ -94,8 +113,6 @@
           } else {
             document.getElementById("status").innerText = `❌ Paiement échoué (${data.status})`;
             window.parent.postMessage({ type: "paymentError", error: "Paiement échoué : " + data.status }, "*");
-
-            // Attendre un peu avant retour arrière
             setTimeout(() => window.history.back(), 2000);
           }
         } catch (e) {
