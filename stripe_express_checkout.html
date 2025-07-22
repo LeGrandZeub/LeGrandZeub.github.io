@@ -26,9 +26,14 @@
     }
     #status {
       margin-top: 20px;
-      text-align: center;
-      font-size: 16px;
+      text-align: left;
+      font-size: 15px;
       color: #333;
+      white-space: pre-line;
+      background: #f5f5f5;
+      border-radius: 6px;
+      padding: 12px;
+      min-height: 80px;
     }
   </style>
 </head>
@@ -41,59 +46,77 @@
   </div>
 
   <script>
+    // Log universel sur toute erreur JS
+    window.onerror = function(message, source, lineno, colno, error) {
+      let el = document.getElementById("status");
+      el.innerText += "\n[window.onerror] " + message;
+    };
+
+    function logStep(msg) {
+      let el = document.getElementById("status");
+      el.innerText += "\n" + msg;
+    }
+
     (async () => {
+      logStep('[1] Début du script Stripe');
+
       const stripe = Stripe("pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu");
+      logStep('[2] Stripe chargé');
+
       const urlParams = new URLSearchParams(window.location.search);
       const clientSecret = urlParams.get("secret");
 
       if (!clientSecret) {
-        document.getElementById("status").innerText = "❌ Client secret manquant.";
+        logStep("[3] ❌ Client secret manquant.");
         return;
       }
+      logStep('[3] Client secret trouvé');
 
       const appearance = { theme: 'stripe' };
       const elements = stripe.elements({ clientSecret, appearance });
 
-      // Ordre : Apple Pay > Google Pay > Carte
+      logStep('[4] Création expressCheckoutElement...');
       const expressCheckoutElement = elements.create("expressCheckout", {
         paymentMethodOrder: ['apple_pay', 'google_pay', 'card'],
         googlePay: {
           merchantId: '12345678901234567890',
-          environment: 'TEST', // changer en 'PRODUCTION' en prod
+          environment: 'TEST',
         },
-        // PAS de applePay ici, Stripe gère tout seul !
+      });
+
+      expressCheckoutElement.on('ready', function() {
+        logStep('[5] ExpressCheckout prêt');
+      });
+      expressCheckoutElement.on('error', function(event) {
+        logStep('[6] Erreur ExpressCheckout: ' + (event.error?.message || 'inconnue'));
       });
 
       expressCheckoutElement.mount("#express-checkout-element");
-
-      // Gestion des erreurs visuelles Stripe Express Checkout
-      expressCheckoutElement.on('ready', function() {
-        console.log('ExpressCheckout prêt');
-      });
-      expressCheckoutElement.on('error', function(event) {
-        console.error('Erreur ExpressCheckout:', event.error);
-        document.getElementById("status").innerText = "❌ " + event.error.message;
-      });
+      logStep('[7] ExpressCheckoutElement monté');
 
       const form = document.getElementById("payment-form");
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        document.getElementById("status").innerText = "⏳ Paiement en cours...";
+        logStep('[8] Submit du formulaire - appel stripe.confirmPayment...');
+        document.getElementById("status").innerText += "\n⏳ Paiement en cours...";
+
         try {
-          const { error } = await stripe.confirmPayment({
+          const result = await stripe.confirmPayment({
             elements,
             confirmParams: {
               return_url: window.location.href + '&redirected=true',
             },
           });
-
-          if (error) {
-            document.getElementById("status").innerText = `❌ ${error.message}`;
-            window.parent.postMessage({ type: "paymentError", error: error.message }, "*");
+          logStep('[9] stripe.confirmPayment terminé');
+          if (result.error) {
+            logStep('[10] ❌ Stripe error: ' + result.error.message);
+            window.parent.postMessage({ type: "paymentError", error: result.error.message }, "*");
+          } else {
+            logStep('[10] ✅ Stripe paiement accepté, attente redirection...');
           }
         } catch (e) {
-          document.getElementById("status").innerText = "❌ Erreur inconnue.";
+          logStep('[11] ❌ Exception JS dans confirmPayment: ' + (e.message || e));
           window.parent.postMessage({ type: "paymentError", error: "Erreur inconnue" }, "*");
         }
       });
@@ -101,22 +124,24 @@
       // Après redirection Stripe, vérifier le statut
       const redirected = urlParams.get("redirected");
       if (redirected) {
+        logStep('[12] Redirected detecté, vérif du statut...');
         try {
-          document.getElementById("status").innerText = "⏳ Vérification du paiement...";
           const paymentIntentId = clientSecret.split('_secret')[0];
+          logStep('[13] Fetch statut paymentIntent...');
           const res = await fetch(`/payments/check-payment-status/${clientSecret}`);
           const data = await res.json();
+          logStep('[14] Statut Stripe reçu: ' + data.status);
 
           if (data.status === 'succeeded') {
-            document.getElementById("status").innerText = "✅ Paiement validé !";
+            logStep('[15] ✅ Paiement validé !');
             window.parent.postMessage({ type: "paymentSuccess" }, "*");
           } else {
-            document.getElementById("status").innerText = `❌ Paiement échoué (${data.status})`;
+            logStep('[16] ❌ Paiement échoué (' + data.status + ')');
             window.parent.postMessage({ type: "paymentError", error: "Paiement échoué : " + data.status }, "*");
             setTimeout(() => window.history.back(), 2000);
           }
         } catch (e) {
-          document.getElementById("status").innerText = "❌ Erreur de vérification du paiement.";
+          logStep('[17] ❌ Erreur lors de la vérification du paiement: ' + (e.message || e));
           window.parent.postMessage({ type: "paymentError", error: "Erreur de vérification du paiement." }, "*");
           setTimeout(() => window.history.back(), 2000);
         }
