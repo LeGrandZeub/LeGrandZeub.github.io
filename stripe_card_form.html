@@ -41,7 +41,7 @@
       const clientSecret = urlParams.get('secret');
       const allowedOrigin = window.location.origin;
 
-      const stripe = Stripe('pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu');
+      const stripe = Stripe('pk_live_51RiBduCNerMPgcyXcIKE28CHB3gcCDlVQ1xqSdi4GevLRufZfUc7F8HCjNaGcnCbDDSisKWhwzV6iiU0hdTuZyNN00w6aLzw9Y');
       const elements = stripe.elements();
       const card = elements.create('card');
       card.mount('#card-element');

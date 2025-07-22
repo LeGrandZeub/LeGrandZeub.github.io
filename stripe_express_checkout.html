@@ -60,7 +60,7 @@
     (async () => {
       logStep('[1] Début du script Stripe');
 
-      const stripe = Stripe("pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu");
+      const stripe = Stripe("pk_live_51RiBduCNerMPgcyXcIKE28CHB3gcCDlVQ1xqSdi4GevLRufZfUc7F8HCjNaGcnCbDDSisKWhwzV6iiU0hdTuZyNN00w6aLzw9Y");
       logStep('[2] Stripe chargé');
 
       const urlParams = new URLSearchParams(window.location.search);
@@ -79,8 +79,7 @@
       const expressCheckoutElement = elements.create("expressCheckout", {
         paymentMethodOrder: ['apple_pay', 'google_pay', 'card'],
         googlePay: {
-          merchantId: '12345678901234567890',
-          environment: 'TEST',
+          merchantId: 'BCR2DN4T777KLZBX',
         },
       });
 
