@@ -96218,7 +96218,7 @@ A.ajY.prototype={}
 A.aoc.prototype={
 Ke(){var s=0,r=A.x(t.H)
 var $async$Ke=A.t(function(a,b){if(a===1)return A.u(b,r)
-while(true)switch(s){case 0:new self.Stripe("pk_live_51RiBduCNerMPgcyXcIKE28CHB3gcCDlVQ1xqSdi4GevLRufZfUc7F8HCjNaGcnCbDDSisKWhwzV6iiU0hdTuZyNN00w6aLzw9Y")
+while(true)switch(s){case 0:new self.Stripe("pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu")
 A.aD("\u2705 Stripe.js initialis\xe9 c\xf4t\xe9 Web")
 return A.v(null,r)}})
 return A.w($async$Ke,r)}}
