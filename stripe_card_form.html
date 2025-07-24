@@ -165,11 +165,52 @@
         padding: 11px 5vw 10px 5vw;
       }
     }
+    .brand-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  margin-top: 0px;
+  justify-content: center;
+  position: relative;
+}
+
+.logo-stripe {
+  height: 32px;
+  width: auto;
+  filter: grayscale(0%) contrast(100%) brightness(102%);
+  display: block;
+  transition: transform 0.22s;
+}
+
+.brand-x {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #a1a6d6;
+  margin: 0 3px 2px 3px;
+  line-height: 1;
+  user-select: none;
+  letter-spacing: -1px;
+}
+
+.logo-louqo {
+  height: 32px;
+  width: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px #c7c9f2a6;
+  background: #fff;
+  display: block;
+  transition: transform 0.22s;
+}
   </style>
 </head>
 <body>
   <div class="card-container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Stripe_Logo%2C_revised_2016.svg" alt="Stripe logo" class="stripe-logo">
+<div class="brand-header">
+  <img src="assets/images/stripe_logo.png" alt="Stripe logo" class="logo-stripe" />
+  <span class="brand-x">×</span>
+  <img src="assets/images/logo_louqo.png" alt="Louqo logo" class="logo-louqo" />
+</div>
     <div class="secure-banner">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M12 4v16m8-8H4"/></svg>
       Paiement sécurisé par Stripe

@@ -3,14 +3,15 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
-const RESOURCES = {"assets/AssetManifest.bin": "c4d4189579f7e059765b099b41517702",
-"assets/AssetManifest.bin.json": "3f3f594af33973daef1164ae2bd15e32",
-"assets/AssetManifest.json": "e913a93d50cd81c26b02de0a8fac5586",
+const RESOURCES = {"assets/AssetManifest.bin": "d7c8bad8e0e8b4d25b0ce91359a241a8",
+"assets/AssetManifest.bin.json": "ae7e915c61c3bc2dccb97e8c660de3aa",
+"assets/AssetManifest.json": "5167d6b9868fecc854641f7cf6abac21",
 "assets/assets/cgu.md": "fd9b5adf9ad78048b4815239158f17ff",
 "assets/assets/images/google_logo.png": "a14861cd33f6003c4aa551e3c80a898e",
 "assets/assets/images/GPay_Acceptance_Mark_800.png": "17708cb2d0ec472b6d761998b40fea76",
 "assets/assets/images/logo_louqo.png": "d6e7f9d87cd097eed5aa29ecc4c6f69b",
 "assets/assets/images/qr_overlay.png": "dafd6fb7da7326b6df27f26f591eedf5",
+"assets/assets/images/stripe_logo.png": "9babdd39864ac40358f6367d081c883f",
 "assets/FontManifest.json": "1ee00d31df7d0b30bfafc1cf4922abf8",
 "assets/fonts/MaterialIcons-Regular.otf": "8490ea3108475a3b0dba42052cee6fa4",
 "assets/NOTICES": "4eda9d03318c9efdcd1bf2239d9e7196",
@@ -32,7 +33,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "c4d4189579f7e059765b099b41517702
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "firebase-messaging-sw.js": "36bbdb55b86d5fdbce74cdb7356e8eb6",
 "flutter.js": "f393d3c16b631f36852323de8e583132",
-"flutter_bootstrap.js": "7912d954cdd572c00cd441f8d0140999",
+"flutter_bootstrap.js": "362f75ff1be26a76b6105cb99a9c9191",
 "google_pay.js": "75145ff8961307325abff21ac71fa2cf",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
@@ -42,7 +43,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "c4d4189579f7e059765b099b41517702
 "/": "fa0987ed36db181c99e5fa0afd16e9cc",
 "main.dart.js": "d5214eac0eaea1a9dc197d2533978fd6",
 "manifest.json": "95f9c632329be8cc96133b633cfc390a",
-"stripe_card_form.html": "0e30632490bccae65cc61041d637d00f",
+"stripe_card_form.html": "85b43ac4a730b2f3ac7a3067ec6e0b7d",
 "stripe_express_checkout.html": "ba2bfab8177e265e37807eaabd36d5a2",
 "version.json": "00a6b2f5928cc030e03849eca5c4f699"};
 // The application shell files that are downloaded before a service worker can
