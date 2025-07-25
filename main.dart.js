@@ -94902,7 +94902,7 @@ j=A.aj(["clientSecret",n.a.d],t.N,t.z)
 i=n.c
 i.toString
 s=6
-return A.k(J.u0(m,j,i,"POST","/payments/pay-with-saved-card"),$async$uv)
+return A.k(J.u0(m,j,i,"POST","/payments/confirm-card-payment"),$async$uv)
 case 6:l=b
 s=l!=null&&J.d(J.M(l,"success"),!0)?7:9
 break
