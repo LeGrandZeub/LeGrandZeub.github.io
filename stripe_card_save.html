@@ -245,7 +245,7 @@
         window.parent.postMessage({ type: 'cardSetupError', error: error.message }, allowedOrigin);
       } else if (setupIntent.status === 'succeeded') {
         // ⚡ POST au back pour attacher la carte et la rendre par défaut
-        fetch('/payments/attach-payment-method', {
+        fetch('https://api.louqo.com/payments/attach-payment-method', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
