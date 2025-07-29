@@ -1,306 +1,70 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <title>Paiement par carte</title>
-  <script src="https://js.stripe.com/v3/"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <style>
-    body {
-      font-family: 'Inter', Arial, sans-serif;
-      background: linear-gradient(135deg, #f6f6fa 0%, #ecebfd 100%);
-      margin: 0;
-      min-height: 100vh;
-    }
-    .card-container {
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 6px 32px rgba(80, 94, 216, 0.09), 0 1.5px 8px rgba(44, 54, 130, 0.07);
-      max-width: 410px;
-      margin: 50px auto 0;
-      padding: 34px 34px 24px 34px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      animation: fadeIn 0.7s cubic-bezier(.25,.8,.25,1);
-    }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(40px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-    .stripe-logo {
-      width: 58px;
-      margin-bottom: 14px;
-    }
-    .secure-banner {
-      background: #e4e9fa;
-      color: #4956a2;
-      border-radius: 10px;
-      font-size: 14px;
-      padding: 7px 13px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 25px;
-    }
-    .secure-banner svg {
-      height: 18px;
-      width: 18px;
-    }
-    h2 {
-      font-size: 1.45rem;
-      margin: 0 0 12px 0;
-      color: #313361;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-align: center;
-    }
-    .order-summary {
-      background: #f6f6fa;
-      border-radius: 9px;
-      padding: 14px 18px 12px 18px;
-      margin-bottom: 28px;
-      width: 100%;
-      box-sizing: border-box;
-      text-align: left;
-      font-size: 15px;
-    }
-    .order-summary .total-amount {
-      font-size: 1.25rem;
-      color: #32337a;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .order-summary .order-items {
-      color: #616282;
-      font-size: 0.97rem;
-      margin-bottom: 2px;
-    }
-    .order-summary .order-bar {
-      font-size: 0.95rem;
-      color: #7a7bb7;
-    }
-    #card-element {
-      border: 1.5px solid #dde1f4;
-      border-radius: 9px;
-      background: white;
-      padding: 16px 14px;
-      margin-bottom: 18px;
-      font-size: 16px;
-      transition: border 0.22s;
-    }
-    #card-element.StripeElement--focus {
-      border: 1.5px solid #6772e5;
-    }
-    #submit-button {
-      width: 100%;
-      background: linear-gradient(90deg, #6772e5 60%, #5762d5 100%);
-      color: white;
-      font-size: 1.12rem;
-      padding: 13px 0;
-      border: none;
-      border-radius: 9px;
-      cursor: pointer;
-      font-weight: 600;
-      margin-top: 6px;
-      transition: box-shadow 0.18s;
-      box-shadow: 0 2px 8px rgba(80,94,216,0.09);
-      letter-spacing: 0.7px;
-    }
-    #submit-button:active, #submit-button:focus {
-      outline: none;
-      box-shadow: 0 2px 12px #4d53c133;
-    }
-    #submit-button[disabled] {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-    .reassurance {
-      font-size: 0.95rem;
-      color: #616282;
-      margin: 14px 0 0 0;
-      text-align: center;
-      line-height: 1.45;
-    }
-    .loader {
-      border: 3px solid #e5e9fb;
-      border-top: 3px solid #6772e5;
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      animation: spin 0.9s linear infinite;
-      margin: 18px auto 0 auto;
-      display: none;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
-    }
-    .error-message {
-      color: #df2e4a;
-      background: #fff4f5;
-      border-radius: 8px;
-      padding: 9px 14px;
-      margin-top: 13px;
-      margin-bottom: -3px;
-      font-size: 0.99rem;
-      text-align: center;
-      display: none;
-    }
-    .footer {
-      margin-top: 28px;
-      text-align: center;
-      font-size: 0.90rem;
-      color: #a6aacd;
-      opacity: 0.85;
-      letter-spacing: 0.2px;
-    }
-    @media (max-width: 600px) {
-      .card-container {
-        padding: 20px 7px 18px 7px;
-        max-width: 98vw;
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Paiement par carte</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 30px;
+        background-color: #f9f9f9;
+        max-width: 500px;
+        margin: auto;
       }
-      .order-summary {
-        padding: 11px 5vw 10px 5vw;
+      #card-element {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 6px;
+        background: white;
+        margin-bottom: 20px;
       }
-    }
-.brand-header {
-  display: flex;
-  align-items: center;
-  gap: 22px; /* espace entre les logos */
-  margin-bottom: 18px;
-  margin-top: 0px;
-  justify-content: center;
-  position: relative;
-}
-
-.logo-stripe, .logo-louqo {
-  height: 90px;     /* taille très large, ajuste à l’œil si besoin */
-  width: auto;
-  margin: 0 8px;
-}
-
-.logo-stripe {
-  filter: grayscale(0%) contrast(100%) brightness(102%);
-  display: block;
-  transition: transform 0.22s;
-}
-
-.brand-x {
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: #a1a6d6;
-  margin: 0 5px 2px 5px;
-  line-height: 1;
-  user-select: none;
-  letter-spacing: -1px;
-}
-
-.logo-louqo {
-  box-shadow: 0 1px 6px #0002;
-  display: block;
-  transition: transform 0.22s;
-}
-
-  </style>
-</head>
-<body>
-  <div class="card-container">
-<div class="brand-header">
-  <img src="icons/stripe_logo.png" alt="Stripe logo" class="logo-stripe" />
-  <span class="brand-x">×</span>
-  <img src="icons/logo_louqo_filled.png" alt="Louqo logo" class="logo-louqo" />
-</div>
-    <div class="secure-banner">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-      Paiement sécurisé par Stripe
-    </div>
-    <h2>Paiement par carte</h2>
-    <div class="order-summary" id="order-summary" style="display:none;">
-      <div class="total-amount" id="amount-summary"></div>
-      <div class="order-items" id="items-summary"></div>
-      <div class="order-bar" id="bar-summary"></div>
-    </div>
-    <form id="payment-form" autocomplete="off" style="width:100%;">
+      #submit-button {
+        background-color: #6772e5;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Paiement sécurisé</h2>
+    <form id="payment-form">
       <div id="card-element"></div>
       <button id="submit-button" type="submit">Payer</button>
-      <div class="loader" id="loader"></div>
-      <div class="error-message" id="error-message"></div>
     </form>
-    <div class="reassurance">
-      Vos données bancaires ne sont jamais stockées.<br>
-      La transaction est cryptée et protégée par Stripe.
-    </div>
-    <div class="footer">
-      Besoin d'aide ? Contactez le support Louqo.<br>
-      <a href="https://stripe.com/fr/privacy" target="_blank" style="color:#a6aacd;text-decoration:underline;">Politique Stripe</a>
-    </div>
-  </div>
-  <script>
-    // Paramètres URL (montant, bar, produits) (optionnels)
-    const urlParams = new URLSearchParams(window.location.search);
-    const clientSecret = urlParams.get('secret');
-    const amount = urlParams.get('amount');  // montant en euros (optionnel)
-    const barName = urlParams.get('bar');    // nom du bar (optionnel)
-    const items = urlParams.get('items');    // produits commandés (optionnel, format: "Bière, Frites, Coca")
 
-    // Affichage du résumé de commande si données présentes
-    if (amount || items || barName) {
-      document.getElementById('order-summary').style.display = 'block';
-      if (amount) {
-        document.getElementById('amount-summary').textContent = `${amount} €`;
-      }
-      if (items) {
-        document.getElementById('items-summary').textContent = `Commande : ${items}`;
-      }
-      if (barName) {
-        document.getElementById('bar-summary').textContent = `Établissement : ${barName}`;
-      }
-    }
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const clientSecret = urlParams.get('secret');
+      const allowedOrigin = window.location.origin;
 
-    const allowedOrigin = window.location.origin;
-    const stripe = Stripe('pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu');
-    const elements = stripe.elements();
-    const card = elements.create('card', {
-      style: {
-        base: {
-          fontSize: '16px',
-          color: '#32337a',
-          fontFamily: 'inherit',
-          '::placeholder': { color: '#a0aac8' },
-        },
-        invalid: { color: '#df2e4a' }
-      }
-    });
-    card.mount('#card-element');
+      const stripe = Stripe('pk_test_51RiBduCNerMPgcyXgwLj3vtZUgxBsX20aKWCRWganWw2XLHoNOpWowZdXAqEpOZQpjox13IU7vYkta9jhqVjbWwC00IVqyTvlu');
+      const elements = stripe.elements();
+      const card = elements.create('card');
+      card.mount('#card-element');
 
-    const form = document.getElementById('payment-form');
-    const loader = document.getElementById('loader');
-    const errorMessage = document.getElementById('error-message');
-    const submitButton = document.getElementById('submit-button');
+      const form = document.getElementById('payment-form');
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      loader.style.display = "block";
-      submitButton.disabled = true;
-      errorMessage.style.display = 'none';
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-      const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: { card: card }
+        const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: card
+          }
+        });
+
+        if (error) {
+          console.error('Erreur Stripe :', error.message);
+          window.parent.postMessage({ type: 'paymentError', error: error.message }, allowedOrigin);
+        } else if (paymentIntent.status === 'succeeded') {
+          console.log('✅ Paiement réussi !');
+          window.parent.postMessage({ type: 'paymentTokenReady', paymentIntentId: paymentIntent.id }, allowedOrigin);
+        }
       });
-
-      loader.style.display = "none";
-      submitButton.disabled = false;
-
-      if (error) {
-        errorMessage.style.display = 'block';
-        errorMessage.textContent = error.message;
-        window.parent.postMessage({ type: 'paymentError', error: error.message }, allowedOrigin);
-      } else if (paymentIntent.status === 'succeeded') {
-        window.parent.postMessage({ type: 'paymentTokenReady', paymentIntentId: paymentIntent.id }, allowedOrigin);
-      }
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
