@@ -31,7 +31,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "744d2d1092a59a06ba13c13c93600d10
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "firebase-messaging-sw.js": "36bbdb55b86d5fdbce74cdb7356e8eb6",
 "flutter.js": "83d881c1dbb6d6bcd6b42e274605b69c",
-"flutter_bootstrap.js": "e131e74a5da04dd83423f962682ee685",
+"flutter_bootstrap.js": "cf35a1847745b7f46767a343f738c9dd",
 "google_pay.js": "75145ff8961307325abff21ac71fa2cf",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
