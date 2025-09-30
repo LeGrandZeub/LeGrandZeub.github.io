@@ -98654,16 +98654,19 @@ A.av6.prototype={
 $0(){return this.a.d=!1},
 $S:0}
 A.av7.prototype={
-$2(a,b){var s,r,q,p,o=J.U(this.a.e,a)
-if(o==null)return
-s=J.V(o)
-r=A.m1(s.h(o,"price"))
+$2(a,b){var s,r,q,p,o,n=J.U(this.a.e,a)
+if(n==null)return
+s=J.V(n)
+r=A.m1(s.h(n,"price"))
 q=r==null?null:r
 if(q==null)q=0
-r=t.N
-p=t.z
-this.b.push(A.ac(["priceCents",B.d.aC(q*100),"qty",b],r,p))
-this.c.push(A.ac(["productId",a,"name",s.h(o,"name"),"price",q,"quantity",b],r,p))},
+p=B.d.aC(q*100)
+o=s.h(n,"name")
+if(o==null)o="Article Louqo"
+s=t.N
+r=t.z
+this.b.push(A.ac(["priceCents",p,"qty",b,"name",o],s,r))
+this.c.push(A.ac(["productId",a,"name",o,"price",q,"quantity",b],s,r))},
 $S:105}
 A.av8.prototype={
 $0(){return this.a.d=!1},
